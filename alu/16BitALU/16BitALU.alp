@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="16BitALU" board="Alchitry Au" language="Lucid" version="3">
   <files>
-	<src top="true">au_top.luc</src>
+    <src top="true">au_top.luc</src>
     <src>adder16.luc</src>
     <src>comparator16.luc</src>
     <src>boolean16.luc</src>
