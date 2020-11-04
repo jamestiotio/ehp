@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="16BitALU" board="Alchitry Au" language="Lucid" version="3">
   <files>
-    <src top="true">au_top.luc</src>
-    <component>counter.luc</component>
+	<src top="true">au_top.luc</src>
+    <src>adder16.luc</src>
+    <src>comparator16.luc</src>
+    <src>boolean16.luc</src>
+    <src>shiftleft16.luc</src>
+    <src>seq_plus_vary.luc</src>
+    <src>fulladder.luc</src>
     <component>reset_conditioner.luc</component>
-    <component>decoder.luc</component>
+    <src>seq_plus_two.luc</src>
+    <component>edge_detector.luc</component>
+    <src>shifter16.luc</src>
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">io.acf</constraint>
     <constraint lib="true">au.xdc</constraint>
