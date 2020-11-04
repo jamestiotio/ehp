@@ -1,0 +1,24 @@
+module boolean16 (
+    input alufn[4],
+    input x[16],
+    input y[16],
+    output result[16]
+  ) {
+
+  always {
+    case(alufn[3:0]){
+      b1000:
+        result[15:0] = x[15:0] & y[15:0];
+      b1110:
+        result[15:0] = x[15:0] | y[15:0];
+      b0110:
+        result[15:0] = x[15:0] ^ y[15:0];
+      b1010:
+        result[15:0] = x[15:0];
+      b0101:
+        result[15:0] = y[15:0];
+      default:
+        result[15:0] = 16b0;
+      }
+  }
+}

@@ -1,0 +1,10 @@
+module shiftleft16 (
+    input x[16],
+    input y[4],
+    output result[16]
+  ) {
+  sig 
+  always {
+    out = 0;
+  }
+}

@@ -1,0 +1,23 @@
+module comparator16 (
+    input z,
+    input n,
+    input v,
+    input alufn[2],
+    output result[16]
+  ) {
+
+  always {
+    result[15:1] = b0;
+  
+    case(alufn[1:0]){
+    b00:
+      result[0] = b0;
+    b01:
+      result[0] = z;
+    b10:
+      result[0] = n^v;
+    b11:
+      result[0] = z | (n^v);
+    }
+  }
+}
