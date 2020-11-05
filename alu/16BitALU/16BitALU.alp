@@ -5,7 +5,6 @@
     <src>comparator16.luc</src>
     <src>increment16.luc</src>
     <src>shifter16.luc</src>
-    <src>fulladder.luc</src>
     <src>adder16.luc</src>
     <src>boolean16.luc</src>
     <src>multiplier16.luc</src>

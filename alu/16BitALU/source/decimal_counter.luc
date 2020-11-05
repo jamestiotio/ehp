@@ -5,16 +5,16 @@ module decimal_counter (
     output ovf,     // counter overflowed
     output value[4] // current value
   ) {
-  
+
   .clk(clk), .rst(rst) {
     dff val[4];     // value storage
   }
 
   always {
     value = val.q;           // output the value
-    
+
     ovf = val.q == 9 && inc; // if max value and incrementing, overflow!
-    
+
     if (inc) {               // should add 1
       if (val.q == 9)        // if max value
         val.d = 0;           // reset to 0

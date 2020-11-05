@@ -6,13 +6,13 @@ module multiplier16 (
   ) {
 
   always {
-    // multiplies (x*y), floor divides (x/y) or modulos (x%y) according to alufn[1:0]
+    // Multiplies (x*y), floor divides (x/y) or modulos (x%y) according to alufn[1:0]
     case (alufn[1:0]) {
       b00:
         s = x * y;
 
       b01:
-        if (y != 0) { // avoid dividing by zero
+        if (y != 0) { // Avoid dividing by zero
           s = x / y;
         }
 
@@ -24,7 +24,7 @@ module multiplier16 (
         s = 16b0;
 
       b11:
-        if (y != 0) { // avoid dividing by zero
+        if (y != 0) { // Avoid dividing by zero
           s = x - ((x / y) * y);
         }
 

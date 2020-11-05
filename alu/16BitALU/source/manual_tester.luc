@@ -1,10 +1,78 @@
+// This module is used to manually test the ALU
+// This module cycles between the X, Y and OUTPUT states on the rising clock edge of the state_change_btn
+// In the X & Y states, the values of c{io_dip[1], io_dip[0]} are written to the X & Y D Flip-Flops respectively
+// The X & Y D Flip-Flops are connected to the ALU's X & Y inputs
+// In the OUTPUT state, the output value from the ALU is displayed on c{io_sel[1], io_sel[0]}
+// The OPCODE input value of the ALU is connected to io_dip[2][5:0]
+// The OPCODE input value can be changed at anytime to change the output value from the ALU
+
 module manual_tester (
     input clk,  // clock
     input rst,  // reset
-    output out
+    input io_dip[3][8],
+    input state_change_btn,
+    output io_seg[8],
+    output io_sel[4],
+    output io_led[3][8]
   ) {
 
+  .clk(clk) {
+    button_conditioner button_cond;
+    edge_detector edge (#RISE(1), #FALL(0));
+
+    .rst(rst) {
+      fsm state = {X, Y, OUTPUT};
+      dff x[16];
+      dff y[16];
+      dff out[16];
+      dff alufn[6];
+    }
+  }
+
+  sig state_change;
+  alu16 alu (.alufn(alufn.q), .x(x.q), .y(y.q));
+
   always {
-    out = 0;
+    button_cond.in = state_change_btn;
+    edge.in = button_cond.out;
+    state_change = edge.out;
+
+    io_sel = 4b1110;
+    io_seg = 8b00000000;
+
+    out.d = alu.out;
+
+    io_led = {8b0,8b0,8b0};  
+    io_led[2][5:0] = alufn.q;
+
+    alufn.d = io_dip[2][5:0];
+
+    case (state.q) {
+      state.X:
+        x.d = c{io_dip[1], io_dip[0]};
+        io_led[1:0] = {x.q[15:8], x.q[7:0]};
+        io_led[2][7:6] = 2b10;
+        io_seg = 8b10001000;
+        if (state_change) {
+          state.d = state.Y;
+        }
+
+      state.Y:
+        y.d = c{io_dip[1], io_dip[0]};
+        io_led[1:0] = {y.q[15:8], y.q[7:0]}; 
+        io_led[2][7:6] = 2b01;
+        io_seg = 8b10000011;       
+        if (state_change) {
+          state.d = state.OUTPUT;
+        }
+      
+      state.OUTPUT: 
+        io_led[1:0] = {out.q[15:8], out.q[7:0]};
+        io_led[2][7:6] = 2b11;
+        io_seg = 8b11000000;
+        if (state_change) {
+          state.d = state.X;
+        }
+    }
   }
 }

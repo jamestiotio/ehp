@@ -6,7 +6,7 @@ module increment16 (
   ) {
 
   always {
-    // increment x or y by 1 according to alufn[0]
+    // Increment x or y by 1 according to alufn[0]
     case (alufn[0]) {
       b0:
         s = x + 1;

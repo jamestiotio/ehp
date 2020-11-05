@@ -1,3 +1,6 @@
+// au_top has two states: AUTO and MANUAL
+// au_top toggles between the states when io_button[2] is pressed
+
 module au_top (
     input clk,              // 100MHz clock
     input rst_n,            // reset button (active low)
@@ -10,19 +13,22 @@ module au_top (
     input io_button [5],    // 5 buttons on IO Shield
     input io_dip [3][8]     // DIP switches on IO Shield
   ) {
-  
-  sig rst;// reset signal
-  alu16 alu16;
-  
+
+  sig rst; // reset signal
+  sig state_change; // Signal to switch between manual and automatic testing
+  sig start_auto_test; // Signal to start automatic testing
+
   .clk(clk) {
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
+    button_conditioner button_cond;
+    edge_detector edge (#RISE(1), #FALL(0));
+
     .rst(rst){
-      fsm state = {STOREA,STOREB,STOREALUFN,CALCULATE};
-      dff storea[16]; 
-      dff storeb[16];
-      dff storealufn[6];
+      fsm state = {MANUAL, AUTOMATIC};
+      auto_tester auto_tester (.start(start_auto_test));
+      manual_tester manual_tester (.io_dip(io_dip), .state_change_btn(io_button[1]));
     }
   }
 
@@ -32,56 +38,33 @@ module au_top (
 
     usb_tx = usb_rx;        // loop serial port
 
-    led = 8h00;             // turn LEDs off
+    button_cond.in = io_button[2];
+    edge.in = button_cond.out;
+    state_change = edge.out;  
+
+    start_auto_test = 0;
 
     io_led = 3x{{8h00}};    // turn LEDs off
-    io_seg = 8hff;          // turn segments off
-    io_sel = 4hf;           // select no digits
-
-
-    alu16.x = 16b0;
-    alu16.y = 16b0;
-    alu16.alufn = 6b0;
+    io_seg = manual_tester.io_seg;
+    io_sel = manual_tester.io_sel;
 
     case (state.q) {
-      state.STOREA:
-        storea.d = c{io_dip[1],io_dip[0]}; //connect switches to dff to store A
-        if (io_button[1]) { //if io_button[1] is pressed, move to next state
-          state.d = state.STOREB;
+      state.MANUAL:
+        io_led = manual_tester.io_led;
+        if (state_change) {
+          state.d = state.AUTOMATIC;
         }
-        else{
-          state.d = state.STOREA;
-        }
-      state.STOREB:
-        storeb.d = c{io_dip[1],io_dip[0]}; //connect switches to dff to store B
-        if (io_button[1]) { //if io_button[1] is pressed, move to next state
-          state.d = state.STOREALUFN;
-        }
-        else {
-          state.d = state.STOREB;
-        }
-      state.STOREALUFN:
-        storealufn.d = io_dip[0][5:0]; //connect switches to dff to store ALUFN
-        if (io_button[1]) { //if io_button[1] is pressed, move to next state
-          state.d = state.CALCULATE;
-        }
-        else {
-          state.d = state.STOREALUFN;
-        }
-      state.CALCULATE:
-        //connect dff outputs to alu inputs
-        alu16.x = storea.q;
-        alu16.y = storeb.q;
-        alu16.alufn = storealufn.q;
-        //connect alu outputs to io_leds
-        io_led[0] = alu16.out[7:0];
-        io_led[1] = alu16.out[15:8];
-        if (io_button[1]) { //if io_button[1] is pressed, move to next state (restart)
-          state.d = state.STOREA;
-        }
-        else {
-          state.d = state.CALCULATE;
+
+      state.AUTOMATIC:
+        io_seg = auto_tester.io_seg;
+        io_sel = auto_tester.io_sel;
+        io_led[2][5:0] = auto_tester.opcode_led; 
+        start_auto_test = 1;
+        if (state_change) {
+          state.d = state.MANUAL;
         }
     }
+
+    led = 8h00;             // turn LEDs off
   }
 }

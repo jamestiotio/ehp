@@ -6,15 +6,15 @@ module shifter16 (
   ) {
 
   always {
-    // shifts x left, right or right arithmetically by y
+    // Shifts x left, right or right arithmetically by y
     case (alufn[1:0]) {
-      b00: //shift left
+      b00: // shift left
         result = x << y[3:0];
 
-      b01: //shift right
+      b01: // shift right
         result = x >> y[3:0];
 
-      b11: //shift right arithmetic
+      b11: // shift right arithmetic
         result = $signed(x) >>> y[3:0];
 
       default:

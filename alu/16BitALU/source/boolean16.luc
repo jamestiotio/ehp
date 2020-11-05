@@ -6,7 +6,7 @@ module boolean16 (
   ) {
 
   always {
-    // chooses logic operations based on alufn[3:0]
+    // Chooses logic operations based on alufn[3:0]
     case (alufn[3:0]) {
       b0000: // 0
         result = 16b0;
@@ -14,11 +14,11 @@ module boolean16 (
         result = ~(x | y);
       b0010: // not converse
         result = ~(x | ~y);
-      b0011: // not a
+      b0011: // not x
         result = ~x;
       b0100: // not imply
         result = x & ~y;
-      b0101: // not b
+      b0101: // not y
         result = ~y;
       b0110: // xor
         result = x ^ y;

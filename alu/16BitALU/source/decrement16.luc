@@ -6,7 +6,7 @@ module decrement16 (
   ) {
 
   always {
-    // decrement x or y by 1 according to alufn[0]
+    // Decrement x or y by 1 according to alufn[0]
     case (alufn[0]) {
       b0:
         s = x - 1;
