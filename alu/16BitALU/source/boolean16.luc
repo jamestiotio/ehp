@@ -28,9 +28,9 @@ module boolean16 (
       b0001: //nor
         result = ~(x|y);
       b0101: //not a 
-        result = -x;
+        result = ~x;
       b0011: //not b
-        result = -y;
+        result = ~y;
       default:
         result = 16b0;
       }
