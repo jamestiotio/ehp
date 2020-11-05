@@ -20,7 +20,7 @@ module au_top (
     reset_conditioner reset_cond;
     .rst(rst){
       fsm state = {STOREA,STOREB,STOREALUFN,CALCULATE};
-      dff storea[16];
+      dff storea[16]; 
       dff storeb[16];
       dff storealufn[6];
     }

@@ -12,7 +12,6 @@ module alu16 (
   multiplier16 multiplier16;
   increment16 increment16;
   decrement16 decrement16;
-  
   always {
     //connecting all inputs of modules to input of alu or other required inputs
     adder16.x = x;

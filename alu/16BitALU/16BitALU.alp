@@ -2,13 +2,16 @@
 <project name="16BitALU" board="Alchitry Au" language="Lucid" version="3">
   <files>
     <src top="true">au_top.luc</src>
+    <src>increment16.luc</src>
     <src>adder16.luc</src>
     <src>comparator16.luc</src>
     <src>boolean16.luc</src>
+    <src>decrement16.luc</src>
     <src>alu16.luc</src>
     <src>fulladder.luc</src>
     <component>reset_conditioner.luc</component>
     <component>edge_detector.luc</component>
+    <src>multiplier16.luc</src>
     <src>shifter16.luc</src>
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">io.acf</constraint>
