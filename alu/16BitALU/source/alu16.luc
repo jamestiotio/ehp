@@ -4,6 +4,7 @@ module alu16 (
     input y[16],
     output out[16]
   ) {
+  //initialise modules
   adder16 adder16;
   comparator16 comparator16;
   boolean16 boolean16;
@@ -11,7 +12,9 @@ module alu16 (
   multiplier16 multiplier16;
   increment16 increment16;
   decrement16 decrement16;
+  
   always {
+    //connecting all inputs of modules to input of alu or other required inputs
     adder16.x = x;
     adder16.y = y;
     adder16.alufn = alufn;
@@ -40,6 +43,8 @@ module alu16 (
     shifter16.x = x;
     shifter16.y = y;
     shifter16.alufn = alufn;
+    
+    //select output of alu based on alufn
     case(alufn[5:4]){
       b00:
          case(alufn[2:1]){
