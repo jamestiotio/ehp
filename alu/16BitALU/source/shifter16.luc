@@ -6,7 +6,7 @@ module shifter16 (
   ) {
 
   always {
-    //shifts x left, right or right arithmetically by y
+    // shifts x left, right or right arithmetically by y
     case (alufn[1:0]) {
       b00: //shift left
         result = x << y[5:0];

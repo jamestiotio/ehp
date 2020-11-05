@@ -16,13 +16,13 @@ module comparator16 (
         result[0] = b0;
 
       b01:
-        result[0] = z;  // x == y
+        result[0] = z; // x == y
 
       b10:
-        result[0] = n ^ v;  // x < y
+        result[0] = n ^ v; // x < y
 
       b11:
-        result[0] = z | (n ^ v);  // x <= y
+        result[0] = z | (n ^ v); // x <= y
       
       default:
         result[0] = b0;
