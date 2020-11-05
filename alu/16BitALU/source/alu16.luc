@@ -8,10 +8,25 @@ module alu16 (
   comparator16 comparator16;
   boolean16 boolean16;
   shifter16 shifter16;
+  multiplier16 multiplier16;
+  increment16 increment16;
+  decrement16 decrement16;
   always {
     adder16.x = x;
     adder16.y = y;
     adder16.alufn = alufn;
+    
+    multiplier16.x = x;
+    multiplier16.y = y;
+    multiplier16.alufn = alufn;
+    
+    increment16.x = x;
+    increment16.y = y;
+    increment16.alufn = alufn;
+    
+    decrement16.x = x;
+    decrement16.y = y;
+    decrement16.alufn = alufn;
     
     comparator16.z = adder16.z;
     comparator16.v = adder16.v;
@@ -27,15 +42,17 @@ module alu16 (
     shifter16.alufn = alufn;
     case(alufn[5:4]){
       b00:
-        case(alufn[2:1]){
+         case(alufn[2:1]){
           b00:
             out = adder16.s;
           b01:
             out = multiplier16.s;
           b10:
-            out = increment.s;
+            out = increment16.s;
           b11:
             out = decrement16.s;
+          default:
+            out = 16b0;
         }
       b01:
         out = boolean16.result;
