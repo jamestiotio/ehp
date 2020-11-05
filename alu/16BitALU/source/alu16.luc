@@ -33,7 +33,9 @@ module alu16 (
           b01:
             out = multiplier16.s;
           b10:
-            out = incrementdecrement16.s;
+            out = increment.s;
+          b11:
+            out = decrement16.s;
         }
       b01:
         out = boolean16.result;
