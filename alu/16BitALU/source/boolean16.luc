@@ -15,7 +15,7 @@ module boolean16 (
         result = x ^ y;
       b1010: //a
         result = x;
-      b0101: //b
+      b1100: //b
         result = y;
       b0000: //0
         result = 16b0;
@@ -27,6 +27,10 @@ module boolean16 (
         result = x ~^ y;
       b0001: //nor
         result = ~(x|y);
+      b0101: //not a 
+        result = -x;
+      b0011: //not b
+        result = -y;
       default:
         result = 16b0;
       }
