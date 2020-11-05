@@ -17,8 +17,8 @@ module adder16 (
 
   always {
 
-    // choose adder or multiplier based on alufn[2:1]
-    case (alufn[2:1]) {
+    // choose adder or multiplier based on alufn[3:2]
+    case (alufn[3:2]) {
       b00:
         // add (x+y) or subtract (x-y) based on alufn[0]
         case (alufn[0]) {

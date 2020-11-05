@@ -26,33 +26,37 @@ This is the instruction set for the ALU.
 
 | ALUFN[5:0] | Operation              | Module       |
 | ---------- | ---------------------- | ------------ |
-| 00 0000    | ADD                    | adder16      |
-| 00 X001    | SUBTRACT               | adder16      |
-| 00 X010    | MULTIPLY               | multiplier16 |
-| 00 X011    | MODULO                 | multiplier16 |
-| 00 X100    | INCREMENT A            | increment16  |
-| 00 X101    | INCREMENT B            | increment16  |
-| 00 X110    | DECREMENT A            | decrement16  |
-| 00 X111    | DECREMENT B            | decrement16  |
-| 01 1000    | AND                    | boolean16    |
-| 01 1110    | OR                     | boolean16    |
-| 01 0110    | XOR                    | boolean16    |
-| 01 1010    | 'A'                    | boolean16    |
-| 01 1100    | 'B'                    | boolean16    |
+| 00 00X0    | ADD                    | adder16      |
+| 00 00X1    | SUBTRACT               | adder16      |
+| 00 0100    | MULTIPLY               | multiplier16 |
+| 00 0101    | FLOOR DIVISION         | multiplier16 |
+| 00 0111    | MODULO                 | multiplier16 |
+| 00 10X0    | INCREMENT A            | increment16  |
+| 00 10X1    | INCREMENT B            | increment16  |
+| 00 11X0    | DECREMENT A            | decrement16  |
+| 00 11X1    | DECREMENT B            | decrement16  |
 | 01 0000    | ZERO                   | boolean16    |
-| 01 1111    | ONE                    | boolean16    |
-| 01 0111    | NAND                   | boolean16    |
-| 01 1001    | XNOR                   | boolean16    |
 | 01 0001    | NOR                    | boolean16    |
-| 01 0101    | NOT 'A'                | boolean16    |
-| 01 0011    | NOT 'B'                | boolean16    |
+| 01 0010    | NOT CONVERSE           | boolean16    |
+| 01 0011    | NOT 'A'                | boolean16    |
+| 01 0100    | NOT IMPLY              | boolean16    |
+| 01 0101    | NOT 'B'                | boolean16    |
+| 01 0110    | XOR                    | boolean16    |
+| 01 0111    | NAND                   | boolean16    |
+| 01 1000    | AND                    | boolean16    |
+| 01 1001    | XNOR                   | boolean16    |
+| 01 1010    | 'A'                    | boolean16    |
+| 01 1011    | IMPLY                  | boolean16    |
+| 01 1100    | 'B'                    | boolean16    |
+| 01 1101    | CONVERSE               | boolean16    |
+| 01 1110    | OR                     | boolean16    |
+| 01 1111    | ONE                    | boolean16    |
 | 10 XX00    | SHIFT LEFT             | shifter16    |
 | 10 XX01    | SHIFT RIGHT            | shifter16    |
 | 10 XX11    | SHIFT RIGHT ARITHMETIC | shifter16    |
 | 11 X01X    | CMPEQ                  | comparator16 |
 | 11 X10X    | CMPLT                  | comparator16 |
 | 11 X11X    | CMPLE                  | comparator16 |
-
 
 
 
