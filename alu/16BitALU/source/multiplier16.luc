@@ -6,6 +6,7 @@ module multiplier16 (
   ) {
 
   always {
+    //multiplies (a*b) or divides (a/b) according to alufn[0]
     case(alufn[0]){
       b0:
         s = x*y;
