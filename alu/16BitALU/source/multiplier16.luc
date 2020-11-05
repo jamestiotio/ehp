@@ -1,0 +1,19 @@
+module multiplier16 (
+    input x[16],
+    input y[16],
+    input alufn[6],
+    output s[16]
+  ) {
+
+  always {
+    case(alufn[0]){
+      b0:
+        s = x*y;
+      b1:
+        s = x/y;
+      default:
+        s=16b0;
+    }
+    
+  }
+}
