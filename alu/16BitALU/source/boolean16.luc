@@ -6,6 +6,7 @@ module boolean16 (
   ) {
 
   always {
+    //chooses logic operations based on alufn[3:0]
     case(alufn[3:0]){
       b1000: // and
         result = x & y;
