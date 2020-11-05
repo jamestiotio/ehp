@@ -47,7 +47,6 @@ This is the instruction set for the ALU.
 | 10 XX00    | SHIFT LEFT             | shifter16    |
 | 10 XX01    | SHIFT RIGHT            | shifter16    |
 | 10 XX11    | SHIFT RIGHT ARITHMETIC | shifter16    |
-| 11 X00X    | ZERO                   | comparator16 |
 | 11 X01X    | CMPEQ                  | comparator16 |
 | 11 X10X    | CMPLT                  | comparator16 |
 | 11 X11X    | CMPLE                  | comparator16 |
