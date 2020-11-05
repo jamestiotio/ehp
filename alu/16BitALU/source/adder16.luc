@@ -8,15 +8,8 @@ module adder16 (
     output v,
     output n
   ) {
-  //fulladder full_adder[16];
   sig result[16];
   always {
-    //full_adder.x=x;
-    /*full_adder.y=y^cin;
-    full_adder.cin[0] = cin;
-    full_adder.cin[15:1] = full_adder.cout[14:0];
-    s = full_adder.s;
-    cout = full_adder.cout[15];*/
     cout = b0;
     case(alufn[0]){
       default:
@@ -29,10 +22,8 @@ module adder16 (
         s = x - y;
         result = x-y;
     }
-    //z = ~(full_adder.s[0]|full_adder.s[1]|full_adder.s[2]|full_adder.s[3]|full_adder.s[4]|full_adder.s[5]|full_adder.s[6]|full_adder.s[7]|full_adder.s[8]|full_adder.s[9]|full_adder.s[10]|full_adder.s[11]|full_adder.s[12]|full_adder.s[13]|full_adder.s[14]|full_adder.s[15]);
     z = ~|result;
     n = result[15];
     v = (x[15] & (y[15]^alufn[0]) & ~result[15]) || (~x[15] & ~(y[15]^alufn[0]) & result[15]);
-    
   }
 }
