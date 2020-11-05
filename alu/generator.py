@@ -114,12 +114,12 @@ test_cases = [
     ("ffff", "0008", "100001", "00ff"), # SHR
     ("ffff", "0001", "100011", "ffff"), # SRA
     ("3fff", "0008", "100011", "003f"), # SRA
-    ("7fff", "7fff", "110010", "0001"), # CMPEQ
-    ("7fff", "0000", "110010", "0000"), # CMPEQ
-    ("7fff", "7fff", "110100", "0000"), # CMPLT
-    ("0000", "7fff", "110100", "0001"), # CMPLT
-    ("7fff", "0000", "110110", "0000"), # CMPLE
-    ("2121", "2121", "110110", "0001"), # CMPLE
+    ("7fff", "7fff", "110011", "0001"), # CMPEQ
+    ("7fff", "0000", "110011", "0000"), # CMPEQ
+    ("7fff", "7fff", "110101", "0000"), # CMPLT
+    ("0000", "7fff", "110101", "0001"), # CMPLT
+    ("7fff", "0000", "110111", "0000"), # CMPLE
+    ("2121", "2121", "110111", "0001"), # CMPLE
 ]
 
 # Begin generating a list of states for auto_tester and instantiate the statement tester modules

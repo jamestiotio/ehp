@@ -64,4 +64,12 @@ This is the instruction set for the ALU.
 
 For the ALU tester, we also have two modes: manual and automatic.
 
-The main code in the `au_top.luc` file switches between the manual mode and the automatic mode when there is a button press detected from `io_button[2]`.
+To switch between automatic and manual testing mode, press `io_button[2]`.
+
+- Manual
+
+  During manual testing mode, select your corresponding X and Y values by using `c{io_dip[1], io_dip[0]}`. Press `io_button[1]` to confirm your selected input values of X and Y accordingly and switch between inputting X, inputting Y and displaying the OUTPUT. The `c{io_led[1], io_led[0]}` will display the input values X and Y in real-time during their respective states. Select your OPCODE by using `io_dip[2][5:0]`. The values of `io_dip[2][7:6]` will display the current state (10 when inputting X, 01 when inputting Y, and 11 when displaying OUTPUT). When the 7-segments display an "O" (i.e. at OUTPUT state), `c{io_led[1], io_led[0]}` will display the resulting output of the ALU.
+
+- Automatic
+
+  During automatic testing mode, the FSM will continuously cycle through the different test cases listed in the `auto_tester.luc` module. The 7-segments will cycle through this sequence for each test case: "X", INPUT_X, "Y", INPUT_Y, "O", EXPECTED_OUTPUT. As the automatic tester progresses through the pre-defined test cases, `io_led[2][5:0]` will display the current OPCODE function/instruction being tested. If an error is encountered, the letter "E" will be displayed on the 7-segments at the end of that test case. If the tester manages to go through all of the test cases successfully without any errors, the 7-segments will display a letter "d".

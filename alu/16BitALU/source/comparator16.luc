@@ -1,7 +1,9 @@
+// We used the x and y signals instead of the z, v and n signals for the comparator
+// This is due to our implementation of additional instructions within the adder16 module (such as the floor division and modulo), which causes the resulting output to be not always of the correct format to be parsed as correct z, v and n signals
+
 module comparator16 (
-    input z,
-    input v,
-    input n,
+    input x[16],
+    input y[16],
     input alufn[6],
     output result[16]
   ) {
@@ -16,14 +18,14 @@ module comparator16 (
         result[0] = b0;
 
       b01:
-        result[0] = z; // x == y
+        result[0] = (x == y);
 
       b10:
-        result[0] = n ^ v; // x < y
+        result[0] = (x < y);
 
       b11:
-        result[0] = z | (n ^ v); // x <= y
-      
+        result[0] = (x <= y);
+
       default:
         result[0] = b0;
     }
