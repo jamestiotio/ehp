@@ -1,25 +1,31 @@
 module comparator16 (
     input z,
-    input n,
     input v,
+    input n,
     input alufn[6],
     output result[16]
   ) {
 
   always {
-    //only least significant bit gives result of operation
-    result[15:1] = b0;
-    
-    //chooses operations a=b, a<b or a<=b based on alufn[2:1]
-    case(alufn[2:1]){
-    b00:
-      result[0] = b0;
-    b01:
-      result[0] = z;
-    b10:
-      result[0] = n^v;
-    b11:
-      result[0] = z | (n^v);
+    // only least significant bit gives result of operation
+    result[15:1] = 15b0;
+
+    // chooses operations x==y, x<y or x<=y based on alufn[2:1]
+    case (alufn[2:1]) {
+      b00:
+        result[0] = b0;
+
+      b01:
+        result[0] = z;  // x == y
+
+      b10:
+        result[0] = n ^ v;  // x < y
+
+      b11:
+        result[0] = z | (n ^ v);  // x <= y
+      
+      default:
+        result[0] = b0;
     }
   }
 }

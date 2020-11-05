@@ -5,12 +5,14 @@ module fulladder (
     output s,
     output cout
   ) {
+
   sig i,j,k;
+
   always {
-    s=x ^ y ^ cin;
-    i=x&y;
-    j= x & cin;
+    s = x ^ y ^ cin;
+    i = x & y;
+    j = x & cin;
     k = y & cin;
-    cout = i |j |k;
+    cout = i | j | k;
   }
 }

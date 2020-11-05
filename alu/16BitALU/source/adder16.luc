@@ -8,28 +8,49 @@ module adder16 (
     output v,
     output n
   ) {
-  //to store result for calculation of z v n
-  sig result[16];
+
+  sig result[16];  // to store result for calculation of z v n
+
+  multiplier16 multiplier16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  increment16 increment16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  decrement16 decrement16 (.x(x), .y(y), .alufn(alufn[5:0]));
+
   always {
+
+    // choose adder or multiplier based on alufn[2:1]
+    case (alufn[2:1]) {
+      b00:
+        // add (x+y) or subtract (x-y) based on alufn[0]
+        case (alufn[0]) {
+          b0:
+            result = x + y;
     
-    cout = b0;
-    
-    //add (a+b) or subtract (a-b) based on alufn[0]
-    case(alufn[0]){
+          b1:
+            result = x - y;
+
+          default:
+            result = 16b0;
+        }
+
+      b01:
+        result = multiplier16.s;
+
+      b10:
+        result = increment16.s;
+
+      b11:
+        result = decrement16.s;
+
       default:
-        s=16b0;
         result = 16b0;
-      b0:
-        s = x + y;
-        result = x+y;
-      b1:
-        s = x - y;
-        result = x-y;
     }
-    //calculate z v n
+
+    // calculate z v n
     z = ~|result;
+    v = (x[15] & (y[15] ^ alufn[0]) & ~result[15]) | (~x[15] & ~(y[15] ^ alufn[0]) & result[15]);
     n = result[15];
-    v = (x[15] & (y[15]^alufn[0]) & ~result[15]) || (~x[15] & ~(y[15]^alufn[0]) & result[15]);
-    
+
+    s = result;
+    cout = (x[15] & y[15] & ~result[15]) | (~x[15] & ~y[15] & result[15]);
   }
 }

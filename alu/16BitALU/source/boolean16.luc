@@ -6,34 +6,34 @@ module boolean16 (
   ) {
 
   always {
-    //chooses logic operations based on alufn[3:0]
-    case(alufn[3:0]){
+    // chooses logic operations based on alufn[3:0]
+    case (alufn[3:0]) {
       b1000: // and
         result = x & y;
       b1110: // or
         result = x | y;
       b0110: // xor
         result = x ^ y;
-      b1010: //a
+      b1010: // x
         result = x;
-      b1100: //b
+      b1100: // y
         result = y;
-      b0000: //0
+      b0000: // 0
         result = 16b0;
-      b1111: //1
-        result= 16b1111111111111111;
-      b0111: //nand
-        result = ~(x&y);
-      b1001: //xnor
+      b1111: // 1
+        result = 16b1111111111111111;
+      b0111: // nand
+        result = ~(x & y);
+      b1001: // xnor
         result = x ~^ y;
-      b0001: //nor
-        result = ~(x|y);
-      b0101: //not a 
+      b0001: // nor
+        result = ~(x | y);
+      b0101: // not a 
         result = ~x;
-      b0011: //not b
+      b0011: // not b
         result = ~y;
       default:
         result = 16b0;
-      }
+    }
   }
 }

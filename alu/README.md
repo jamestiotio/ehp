@@ -22,16 +22,18 @@ In this project, we implemented an Arithmetic Logic Unit (ALU) and its tester in
 
 This is the instruction set for the ALU.
 
+> NOTE: X would indicate that that particular bit's value does not matter (whether it is a 0 or 1).
+
 | ALUFN[5:0] | Operation              | Module       |
 | ---------- | ---------------------- | ------------ |
 | 00 0000    | ADD                    | adder16      |
 | 00 X001    | SUBTRACT               | adder16      |
 | 00 X010    | MULTIPLY               | multiplier16 |
-| 00 X011    | DIVIDE                 | multiplier16 |
-| 00 X100    | INCREMENTA             | increment16  |
-| 00 X101    | INCREMENTB             | increment16  |
-| 00 X110    | DECREMENTA             | decrement16  |
-| 00 X111    | DECREMENTB             | decrement16  |
+| 00 X011    | MODULO                 | multiplier16 |
+| 00 X100    | INCREMENT A            | increment16  |
+| 00 X101    | INCREMENT B            | increment16  |
+| 00 X110    | DECREMENT A            | decrement16  |
+| 00 X111    | DECREMENT B            | decrement16  |
 | 01 1000    | AND                    | boolean16    |
 | 01 1110    | OR                     | boolean16    |
 | 01 0110    | XOR                    | boolean16    |

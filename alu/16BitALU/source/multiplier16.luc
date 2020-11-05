@@ -6,15 +6,22 @@ module multiplier16 (
   ) {
 
   always {
-    //multiplies (a*b) or divides (a/b) according to alufn[0]
-    case(alufn[0]){
+    // multiplies (x*y) or modulos (x%y) according to alufn[0]
+    case (alufn[0]) {
       b0:
-        s = x*y;
+        s = x * y;
+
       b1:
-        s = x/y;
+        if (y != 0) { // avoid dividing by zero
+          s = x - ((x / y) * y);
+        }
+
+        else {
+          s = x;
+        }
+
       default:
-        s=16b0;
+        s = 16b0;
     }
-    
   }
 }
