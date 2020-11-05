@@ -7,8 +7,10 @@ module comparator16 (
   ) {
 
   always {
+    //only least significant bit gives result of operation
     result[15:1] = b0;
-  
+    
+    //chooses operations a=b, a<b or a<=b based on alufn[2:1]  
     case(alufn[2:1]){
     b00:
       result[0] = b0;
