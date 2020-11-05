@@ -8,9 +8,11 @@ module adder16 (
     output v,
     output n
   ) {
+  //to store result for calculation of z v n
   sig result[16];
   always {
     cout = b0;
+    //add (a+b) or subtract (a-b) based on alufn[0]
     case(alufn[0]){
       default:
         s=16b0;
@@ -22,6 +24,7 @@ module adder16 (
         s = x - y;
         result = x-y;
     }
+    //calculate z v n
     z = ~|result;
     n = result[15];
     v = (x[15] & (y[15]^alufn[0]) & ~result[15]) || (~x[15] & ~(y[15]^alufn[0]) & result[15]);
