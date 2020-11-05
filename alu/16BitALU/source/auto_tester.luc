@@ -65,8 +65,8 @@ module auto_tester (
       statement_tester test_45 (#INPUT_X(16hfbfb), #INPUT_Y(16hacac), #OPCODE(6b011101), #EXPECTED_OUTPUT(16hfbfb));
       statement_tester test_46 (#INPUT_X(16h0000), #INPUT_Y(16hffff), #OPCODE(6b011110), #EXPECTED_OUTPUT(16hffff));
       statement_tester test_47 (#INPUT_X(16h0001), #INPUT_Y(16h0010), #OPCODE(6b011110), #EXPECTED_OUTPUT(16h0011));
-      statement_tester test_48 (#INPUT_X(16h2e45), #INPUT_Y(16h1984), #OPCODE(6b011111), #EXPECTED_OUTPUT(16h1111));
-      statement_tester test_49 (#INPUT_X(16hadef), #INPUT_Y(16h2000), #OPCODE(6b011111), #EXPECTED_OUTPUT(16h1111));
+      statement_tester test_48 (#INPUT_X(16h2e45), #INPUT_Y(16h1984), #OPCODE(6b011111), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_49 (#INPUT_X(16hadef), #INPUT_Y(16h2000), #OPCODE(6b011111), #EXPECTED_OUTPUT(16hffff));
       statement_tester test_50 (#INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100000), #EXPECTED_OUTPUT(16hfffe));
       statement_tester test_51 (#INPUT_X(16hffff), #INPUT_Y(16h0008), #OPCODE(6b100000), #EXPECTED_OUTPUT(16hff00));
       statement_tester test_52 (#INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100001), #EXPECTED_OUTPUT(16h7fff));

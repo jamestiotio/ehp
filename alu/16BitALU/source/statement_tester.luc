@@ -57,7 +57,7 @@ module statement_tester #(
         }
 
       state.DISP_X_1:
-        io_seg = 8b10001000;
+        io_seg = 8b10001001;
         io_sel = 4b1110;
         if (slow_clk_edge.out) {
           state.d = state.DISP_X_2;
@@ -72,7 +72,7 @@ module statement_tester #(
         }
 
       state.DISP_Y_1:
-        io_seg = 8b10000011;
+        io_seg = 8b10010001;
         io_sel = 4b1110;
         if (slow_clk_edge.out) {
           state.d = state.DISP_Y_2;
