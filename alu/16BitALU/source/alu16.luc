@@ -27,7 +27,12 @@ module alu16 (
     shifter16.alufn = alufn;
     case(alufn[5:4]){
       b00:
-        out = adder16.s;
+        case(alufn[1]){
+          b0:
+            out = adder16.s;
+          b1:
+            out = multiplier16.s;
+        }
       b01:
         out = boolean16.result;
       b10:
