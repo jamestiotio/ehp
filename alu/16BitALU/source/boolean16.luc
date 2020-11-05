@@ -1,5 +1,5 @@
 module boolean16 (
-    input alufn[4],
+    input alufn[6],
     input x[16],
     input y[16],
     output result[16]
@@ -7,18 +7,28 @@ module boolean16 (
 
   always {
     case(alufn[3:0]){
-      b1000:
-        result[15:0] = x[15:0] & y[15:0];
-      b1110:
-        result[15:0] = x[15:0] | y[15:0];
-      b0110:
-        result[15:0] = x[15:0] ^ y[15:0];
-      b1010:
-        result[15:0] = x[15:0];
-      b0101:
-        result[15:0] = y[15:0];
+      b1000: // and
+        result = x & y;
+      b1110: // or
+        result = x | y;
+      b0110: // xor
+        result = x ^ y;
+      b1010: //a
+        result = x;
+      b0101: //b
+        result = y;
+      b0000: //0
+        result = 16b0;
+      b1111: //1
+        result= 16b1111111111111111;
+      b0111: //nand
+        result = ~(x&y);
+      b1001: //xnor
+        result = x ~^ y;
+      b0001: //nor
+        result = ~(x|y);
       default:
-        result[15:0] = 16b0;
+        result = 16b0;
       }
   }
 }

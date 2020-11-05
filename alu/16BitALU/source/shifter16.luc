@@ -1,17 +1,20 @@
 module shifter16 (
     input x[16],
-    input y[4],
-    input alufn[2],
+    input y[16],
+    input alufn[6],
     output result[16]
   ) {
 
   always {
     case(alufn[1:0]){
       b00:
-        result[15:0] = x[15:0] << y[3:0];
+        result = x << y[3:0];
       b01:
-        result[15:0] = 
+        result = x >> y[3:0]; 
       b11:
+        result = x >>> y[3:0];
+      default:
+        result = 16b0;
       }
   }
 }

@@ -1,0 +1,40 @@
+module alu16 (
+    input alufn[6],
+    input x[16],
+    input y[16],
+    output out[16]
+  ) {
+  adder16 adder16;
+  comparator16 comparator16;
+  boolean16 boolean16;
+  shifter16 shifter16;
+  always {
+    adder16.x = x;
+    adder16.y = y;
+    adder16.alufn = alufn;
+    
+    comparator16.z = adder16.z;
+    comparator16.v = adder16.v;
+    comparator16.n = adder16.n;
+    comparator16.alufn = alufn;
+    
+    boolean16.x = x;
+    boolean16.y = y;
+    boolean16.alufn = alufn;
+    
+    shifter16.x = x;
+    shifter16.y = y;
+    shifter16.alufn = alufn;
+    case(alufn[5:4]){
+      b00:
+        out = adder16.s;
+      b01:
+        out = boolean16.result;
+      b10:
+        out = shifter16.result;
+      b11:
+        out = comparator16.result;
+      default:
+        out = 16b0;
+  }
+}

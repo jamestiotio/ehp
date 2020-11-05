@@ -2,14 +2,14 @@ module comparator16 (
     input z,
     input n,
     input v,
-    input alufn[2],
+    input alufn[6],
     output result[16]
   ) {
 
   always {
     result[15:1] = b0;
   
-    case(alufn[1:0]){
+    case(alufn[2:1]){
     b00:
       result[0] = b0;
     b01:

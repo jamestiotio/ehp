@@ -1,7 +1,6 @@
 module adder16 (
     input x[16],
     input y[16],
-    input cin,
     input alufn[6],
     output s[16],
     output cout,
@@ -31,14 +30,9 @@ module adder16 (
         result = x-y;
     }
     //z = ~(full_adder.s[0]|full_adder.s[1]|full_adder.s[2]|full_adder.s[3]|full_adder.s[4]|full_adder.s[5]|full_adder.s[6]|full_adder.s[7]|full_adder.s[8]|full_adder.s[9]|full_adder.s[10]|full_adder.s[11]|full_adder.s[12]|full_adder.s[13]|full_adder.s[14]|full_adder.s[15]);
-    if (result == 16b0){
-      z = b1;
-    }
-    else{
-      z = b0;
-    }
+    z = ~|result;
     n = result[15];
-    v = (x[15] & (y[15]^cin) & ~result[15]) || (~x[15] & ~(y[15]^cin) & result[15]);
+    v = (x[15] & (y[15]^alufn[0]) & ~result[15]) || (~x[15] & ~(y[15]^alufn[0]) & result[15]);
     
   }
 }
