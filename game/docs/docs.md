@@ -30,21 +30,21 @@
 
 
 ## Table 2: Overview of States & Transitions
-|       | START | Powerups               | Attack  | Split       | Choose Split | Choose Powerup | Reset                     | Check P1/P2 | Update Turn | Win  | Waiting for FROM | Store FROM  | Store TO    | GAME OVER |
-| ----- | ----- | ---------------------- | ------- | ----------- | ------------ | -------------- | ------------------------- | ----------- | ----------- | ---- | ---------------- | ----------- | ----------- | --------- |
-| ALUFN | -     | ADD/BOOLEAN CHOICE/MOD | ADD/MOD | ADD/MOD/SUB | -/ADD/CMPLE  | ADD/MOD        | ADD/-/-/-                 | CMPEQ       | XOR         | ADD  | -                | 'X'/-/'X'/- | 'X'/-/'X'/- | -         |
-| ASEL  | -     | 0                      | 0       | 0           | -/0/0        | 0              | 0/-/-/-                   | 0           | 0           | 0    | -                | 0/-/1/-     | 0/-/1/-     | -         |
-| BSEL  | -     | 00/00/10               | 00/10   | 00/10/00    | -/01/00      | 01/11          | 00/-/-/-                  | 00          | 01          | 01   | -                | -           | -           | -         |
-| WDSEL | -     | 00/00/00               | 00      | 00          | 01/01/00     | 00             | 00/01/10/01               | 00          | 00          | 00   | -                | 00/01/00/10 | 00/01/00/10 | -         |
-| Ra    | -     | R15/TO/TO              | TO/TO   | R8/TO/R8    | R8           | R9             | R15/-/-/-                 | R0&R1/R2&R3 | R11         | R11  | -                | R15/-/-/-   | R15/-/-/-   | -         |
-| Rb    | -     | R9/FROM/-              | FROM/-  | TO/-/FROM   | -/-/FROM     | -              | R15/-/-/-                 | R15         | -           | -    | -                | -           | -           | -         |
-| Rc    | -     | R15/TO/TO              | TO/TO   | TO/TO/FROM  | R8/R8/R15    | R9             | R[6:10]/R[0:3]/R[4:5]/R11 | R15         | R11         | R10  | -                | R6          | R7          | -         |
+|       | START | Powerups               | Attack  | Split       | Choose Split | Choose Powerup | Reset                     | Check P1/P2 | Check Turn | Update Turn | Win  | Waiting for FROM | Store FROM  | Store TO    | GAME OVER |
+| ----- | ----- | ---------------------- | ------- | ----------- | ------------ | -------------- | ------------------------- | ----------- | ---------- | ----------- | ---- | ---------------- | ----------- | ----------- | --------- |
+| ALUFN | -     | ADD/BOOLEAN CHOICE/MOD | ADD/MOD | ADD/MOD/SUB | -/ADD/CMPLE  | ADD/MOD        | ADD/-/-/-                 | CMPEQ       | CMPEQ      | XOR         | ADD  | -                | 'X'/-/'X'/- | 'X'/-/'X'/- | -         |
+| ASEL  | -     | 0                      | 0       | 0           | -/0/0        | 0              | 0/-/-/-                   | 0           | 0          | 0           | 0    | -                | 0/-/1/-     | 0/-/1/-     | -         |
+| BSEL  | -     | 00/00/10               | 00/10   | 00/10/00    | -/01/00      | 01/11          | 00/-/-/-                  | 00          | 00         | 01          | 01   | -                | -           | -           | -         |
+| WDSEL | -     | 00/00/00               | 00      | 00          | 01/01/00     | 00             | 00/01/10/01               | 00          | 00         | 00          | 00   | -                | 00/01/00/10 | 00/01/00/10 | -         |
+| Ra    | -     | R15/TO/TO              | TO/TO   | R8/TO/R8    | R8           | R9             | R15/-/-/-                 | R0&R1/R2&R3 | R11        | R11         | R11  | -                | R15/-/-/-   | R15/-/-/-   | -         |
+| Rb    | -     | R9/FROM/-              | FROM/-  | TO/-/FROM   | -/-/FROM     | -              | R15/-/-/-                 | R15         | R15        | -           | -    | -                | -           | -           | -         |
+| Rc    | -     | R15/TO/TO              | TO/TO   | TO/TO/FROM  | R8/R8/R15    | R9             | R[6:10]/R[0:3]/R[4:5]/R11 | R15         | R15        | R11         | R10  | -                | R6          | R7          | -         |
 
 + REMARK: FROM and TO here and below refer to inputs to Control Unit, which are the values stored in R6 and R7 respectively.
 
 ### Table 2.1: RESET 
 
-Green in diagram
+Green in diagram.
 
 |       | RESET HANDS | RESET TO ZERO | RESET POWERUP | RESET TURN |
 | ----- | ----------- | ------------- | ------------- | ---------- |
@@ -96,7 +96,7 @@ Red in diagram.
     
       | VALUE IN R9 | BOOLEAN CHOICES |
       | ----------- | --------------- |
-      | 0000        | NOT'Y'          |
+      | 0000        | NOT 'Y'         |
       | 0001        | AND             |
       | 0010        | NAND            |
       | 0011        | OR              |
@@ -104,12 +104,12 @@ Red in diagram.
       | 0101        | XOR             |
       | 0110        | XNOR            |
       | 0111        | 'X'             |
-      | 1000        | NOT'X'          |
+      | 1000        | NOT 'X'         |
     
 
 ### Table 2.3: NORMAL MODE
 
-Black in diagram for step 1 and 2.. Light Blue for step 2.2.
+Black in diagram for step 1 and 2.1. Light Blue for step 2.2.
 
 + STEP 1: STORE IN FROM IF CHOSEN Reg[FROM] != 0
 
@@ -123,7 +123,7 @@ Black in diagram for step 1 and 2.. Light Blue for step 2.2.
     | Rb    | R15         | -             |
     | Rc    | R15         | R6            |
 
-    + Ra being R0/R1/R2/R3 depends on which button has been pressed
+    + Ra being R0/R1/R2/R3 depends on which button has been pressed.
     + The ALU output is connected to the Control Unit, such that if the output is 1 (true that R0/R1/R2/R3 is 0), we go to back to P1. If the output is 0, we go to STORE IN FROM.
 
 + STEP 2.1: GO TO ATTACK
@@ -151,7 +151,7 @@ Black in diagram for step 1 and 2.. Light Blue for step 2.2.
     | Rc    | R7          | R8       | R8   | R15          | TO   | TO   | FROM |
 
     + NOTE: CHOOSING and CHECK form a loop to choose how much to split. Only when POWERUP button is pressed to confirm the choice, it will move on to do SUB, ADD and MOD.
-    + The ALU output from CHECK FROM>X will determine the next state. 1 - moves on to 2?/3?/4?. 0 - goes back to 1?
+    + The ALU output from CHECK FROM>X will determine the next state. If 1, move on to 2?/3?/4?. If 0, go back to 1?.
 
 ### Table 2.4: CHECK P1/P2
 
@@ -172,7 +172,21 @@ Orange in diagram.
   + R2 and R3 when CHECK P2.
 + P1/P2 WINS updates R10 with the winner.
 
-### Table 2.5: UPDATE TURN
+### Table 2.5: CHECK TURN
+
+Black in diagram.
+
+|       | CHECK TURN |
+| ----- | ---------- |
+| ALUFN | CMPEQ      |
+| ASEL  | 0          |
+| BSEL  | 00         |
+| WDSEL | 00         |
+| Ra    | R11        |
+| Rb    | R15        |
+| Rc    | R11        |
+
+### Table 2.6: UPDATE TURN
 
 Purple in diagram.
 
@@ -186,7 +200,7 @@ Purple in diagram.
 | Rb    | -         |
 | Rc    | R11       |
 
-### Table 2.6: WAITING STATES
+### Table 2.7: WAITING STATES
 
 Dark Blue in diagram.
 
@@ -202,7 +216,7 @@ Dark Blue in diagram.
 
 
 
-### Table 2.7: STORE IN FROM/TO IN DETAILS
+### Table 2.8: STORE IN FROM/TO IN DETAILS
 
 + In order to minimize the the output of CU, we will use different ways to get the address which we want to store in FROM and AND.
 + Details are shown in the table below. If STORE IN FROM, Rc will be R6. If STORE IN TO, Rc will be R7.
