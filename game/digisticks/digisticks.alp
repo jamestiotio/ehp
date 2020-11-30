@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="digisticks" board="Alchitry Au" language="Lucid" version="3">
   <files>
-    <src>multi_dec_ctr.luc</src>
-    <src>auto_tester.luc</src>
-    <src>multi_seven_seg.luc</src>
-    <component>pipeline.luc</component>
-    <component>counter.luc</component>
-    <src>manual_tester.luc</src>
-    <component>decoder.luc</component>
     <src>increment16.luc</src>
-    <src>alu16.luc</src>
-    <src>seven_seg.luc</src>
-    <src>statement_tester.luc</src>
-    <src>shifter16.luc</src>
-    <src>decimal_counter.luc</src>
-    <src>boolean16.luc</src>
-    <src top="true">au_top.luc</src>
-    <src>comparator16.luc</src>
-    <src>decrement16.luc</src>
-    <component>reset_conditioner.luc</component>
     <component>edge_detector.luc</component>
+    <src>game_cu.luc</src>
     <src>adder16.luc</src>
-    <component>button_conditioner.luc</component>
+    <src>decrement16.luc</src>
     <src>multiplier16.luc</src>
+    <src>statement_tester.luc</src>
+    <component>button_conditioner.luc</component>
+    <src>shifter16.luc</src>
+    <src>seven_seg.luc</src>
+    <src>boolean16.luc</src>
+    <src>comparator16.luc</src>
+    <src>multi_dec_ctr.luc</src>
+    <src top="true">au_top.luc</src>
+    <src>manual_tester.luc</src>
+    <component>pipeline.luc</component>
+    <src>alu16.luc</src>
+    <src>multi_seven_seg.luc</src>
+    <src>auto_tester.luc</src>
+    <component>reset_conditioner.luc</component>
+    <component>counter.luc</component>
+    <src>decimal_counter.luc</src>
+    <component>decoder.luc</component>
+    <constraint lib="true">au.xdc</constraint>
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">io.acf</constraint>
-    <constraint lib="true">au.xdc</constraint>
   </files>
 </project>
