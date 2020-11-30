@@ -2,10 +2,21 @@ module multiplier16 (
     input x[16],
     input y[16],
     input alufn[6],
-    output s[16]
+    output s[16],
+    output error  // Output error if division by zero occurs
   ) {
+  
+  sig a;
+  sig divisor;
+  sig temp;
 
   always {
+    error = 0;
+
+    a = 0;
+    divisor = 0;
+    temp = 0;
+
     // Multiplies (x*y), floor divides (x/y) or modulos (x%y) according to alufn[1:0]
     case (alufn[1:0]) {
       b00:
@@ -18,18 +29,50 @@ module multiplier16 (
 
         else {
           s = x;
+          error = 1;
         }
-      
-      b10:
-        s = 16b0;
 
-      b11:
+      b10: // Signed modulo
+        if (y != 0) { // Avoid dividing by zero
+          if ($signed(y) > 0) {
+            if ($signed(x) < 0) {
+              a = (($signed(x) - (($signed(x) / y) * y)) + y); 
+              s = a - ((a / y) * y);
+            }
+
+            else {
+              s = x - ((x / y) * y);
+            }
+          }
+
+          else {
+            if ($signed(x) < 0) {
+              a = ~x + 1; // Two's complement
+              divisor = ~y + 1; // Two's complement
+              temp = a - ((a / divisor) * divisor);
+              s = ~temp + 1; // Two's complement
+            }
+
+            else {
+              divisor = ~y + 1; // Two's complement
+              s = x - ((x / divisor) * divisor) - divisor;
+            }
+          }
+        }
+
+        else {
+          s = x;
+          error = 1;
+        }
+
+      b11: // Unsigned modulo
         if (y != 0) { // Avoid dividing by zero
           s = x - ((x / y) * y);
         }
 
         else {
           s = x;
+          error = 1;
         }
 
       default:

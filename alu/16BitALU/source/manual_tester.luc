@@ -11,6 +11,7 @@ module manual_tester (
     input rst,  // reset
     input io_dip[3][8],
     input state_change_btn,
+    input forced_error,
     output io_seg[8],
     output io_sel[4],
     output io_led[3][8]
@@ -18,31 +19,43 @@ module manual_tester (
 
   .clk(clk) {
     button_conditioner button_cond;
+    button_conditioner required_error;
     edge_detector edge (#RISE(1), #FALL(0));
+    edge_detector error_edge (#RISE(1), #FALL(0));
 
     .rst(rst) {
-      fsm state = {X, Y, OUTPUT};
+      fsm state = {X, Y, OUTPUT, ERROR_CHECK};
       dff x[16];
       dff y[16];
       dff out[16];
       dff alufn[6];
+      dff error;
+      multi_seven_seg seg_display;
+      alu16 alu (.alufn(alufn.q), .x(x.q), .y(y.q)); // We need CLK and RST for ALU for factorial functionality
     }
   }
 
   sig state_change;
-  alu16 alu (.alufn(alufn.q), .x(x.q), .y(y.q));
+  sig compulsory_error;
 
   always {
     button_cond.in = state_change_btn;
     edge.in = button_cond.out;
     state_change = edge.out;
 
+    required_error.in = forced_error;
+    error_edge.in = required_error.out;
+    compulsory_error = error_edge.out;
+
     io_sel = 4b1110;
     io_seg = 8b00000000;
 
     out.d = alu.out;
+    error.d = alu.err;
 
-    io_led = {8b0,8b0,8b0};  
+    seg_display.values = {4b0,4b0,4b0,4b0};
+
+    io_led = {8b0,8b0,8b0};
     io_led[2][5:0] = alufn.q;
 
     alufn.d = io_dip[2][5:0];
@@ -52,24 +65,45 @@ module manual_tester (
         x.d = c{io_dip[1], io_dip[0]};
         io_led[1:0] = {x.q[15:8], x.q[7:0]};
         io_led[2][7:6] = 2b10;
-        io_seg = 8b10001001;
+        io_seg = 8b10001001; // X
         if (state_change) {
           state.d = state.Y;
+        }
+        if (compulsory_error) {
+          state.d = state.ERROR_CHECK;
         }
 
       state.Y:
         y.d = c{io_dip[1], io_dip[0]};
         io_led[1:0] = {y.q[15:8], y.q[7:0]}; 
         io_led[2][7:6] = 2b01;
-        io_seg = 8b10010001;       
+        io_seg = 8b10010001; // y
         if (state_change) {
           state.d = state.OUTPUT;
         }
-      
+        if (compulsory_error) {
+          state.d = state.ERROR_CHECK;
+        }
+
       state.OUTPUT:
         io_led[1:0] = {out.q[15:8], out.q[7:0]};
         io_led[2][7:6] = 2b11;
-        io_seg = 8b11000000;
+        io_seg = 8b10100011; // o
+        if (error.q) {
+          state.d = state.ERROR_CHECK;
+        }
+        if (state_change) {
+          state.d = state.X;
+        }
+        if (compulsory_error) {
+          state.d = state.ERROR_CHECK;
+        }
+
+      state.ERROR_CHECK:
+        io_led = {8b0,8b0,8b0}; 
+        seg_display.values = {4he, 4he, 4he, 4he}; // EEEE
+        io_seg = ~seg_display.seg;
+        io_sel = ~seg_display.sel;
         if (state_change) {
           state.d = state.X;
         }

@@ -4,21 +4,51 @@ module shifter16 (
     input alufn[6],
     output result[16]
   ) {
+  
+  var i;
 
   always {
-    // Shifts x left, right or right arithmetically by y
-    case (alufn[1:0]) {
-      b00: // shift left
-        result = x << y[3:0];
+    // Chooses shift, rotate or mirror based on alufn[3:2]
+    case (alufn[3:2]) {
+      b00:
+        // Shifts x left, right or right arithmetically by y
+        case (alufn[1:0]) {
+          b00: // shift left
+            result = x << y[3:0];
 
-      b01: // shift right
-        result = x >> y[3:0];
+          b01: // shift right
+            result = x >> y[3:0];
 
-      b11: // shift right arithmetic
-        result = $signed(x) >>> y[3:0];
+          b11: // shift right arithmetic
+            result = $signed(x) >>> y[3:0];
 
+          default:
+            result = 16b0;
+        }
+      
+      b01:
+        // Rotates x left or right by y
+        case (alufn[1:0]) {
+          b00: // rotate left
+            result = c{x, x} << y[3:0];
+
+          b01: // rotate right
+            result = c{x, x} >> y[3:0];
+          
+          default:
+            result = 16b0;
+        }
+      
+      b11:
+        // Mirrors x
+        for (i = 0; i < 16; i++) {
+          result[i] = x[15-i];
+        }
+      
       default:
         result = 16b0;
     }
+
+    
   }
 }
