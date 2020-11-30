@@ -1,0 +1,46 @@
+// This is the main 16-Bit ALU module
+
+module alu16 (
+    input alufn[6],
+    input x[16],
+    input y[16],
+    output out[16],
+    output z,
+    output v,
+    output n
+  ) {
+
+  // Initialise modules
+  adder16 addormul16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  boolean16 boolean16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  shifter16 shifter16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  comparator16 comparator16 (.x(x), .y(y), .alufn(alufn[5:0]));
+
+  always {
+    // The z, v, n outputs can only be non-zero when carrying out arithmetic operations (ADD, SUB, MUL, FLOORDIV or MODULO)
+    z = 0;
+    v = 0;
+    n = 0;
+
+    // Select output of ALU based on alufn
+    case (alufn[5:4]) {
+      b00:
+        out = addormul16.s;
+        z = addormul16.z;
+        v = addormul16.v;
+        n = addormul16.n;
+
+      b01:
+        out = boolean16.result;
+
+      b10:
+        out = shifter16.result;
+
+      b11:
+        out = comparator16.result;
+
+      default:
+        out = 16b0;
+    }
+  }
+}

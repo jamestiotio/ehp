@@ -1,0 +1,56 @@
+module adder16 (
+    input x[16],
+    input y[16],
+    input alufn[6],
+    output s[16],
+    output cout,
+    output z,
+    output v,
+    output n
+  ) {
+
+  sig result[16];  // This signal is used to store the result for the calculation of z v n
+
+  multiplier16 multiplier16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  increment16 increment16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  decrement16 decrement16 (.x(x), .y(y), .alufn(alufn[5:0]));
+
+  always {
+
+    // Choose adder or multiplier based on alufn[3:2]
+    case (alufn[3:2]) {
+      b00:
+        // Add (x+y) or subtract (x-y) based on alufn[0]
+        case (alufn[0]) {
+          b0:
+            result = x + y;
+    
+          b1:
+            result = x - y;
+
+          default:
+            result = 16b0;
+        }
+
+      b01:
+        result = multiplier16.s;
+
+      b10:
+        result = increment16.s;
+
+      b11:
+        result = decrement16.s;
+
+      default:
+        result = 16b0;
+    }
+
+    // Calculate z v n
+    z = ~|result;
+    v = (x[15] & (y[15] ^ alufn[0]) & ~result[15]) | (~x[15] & ~(y[15] ^ alufn[0]) & result[15]);
+    n = result[15];
+
+    s = result;
+    cout = (x[15] & y[15] & ~result[15]) | (~x[15] & ~y[15] & result[15]);
+  }
+}

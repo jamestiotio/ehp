@@ -1,0 +1,47 @@
+module boolean16 (
+    input alufn[6],
+    input x[16],
+    input y[16],
+    output result[16]
+  ) {
+
+  always {
+    // Chooses logic operations based on alufn[3:0]
+    case (alufn[3:0]) {
+      b0000: // 0
+        result = 16b0;
+      b0001: // nor
+        result = ~(x | y);
+      b0010: // not converse
+        result = ~(x | ~y);
+      b0011: // not x
+        result = ~x;
+      b0100: // not imply
+        result = x & ~y;
+      b0101: // not y
+        result = ~y;
+      b0110: // xor
+        result = x ^ y;
+      b0111: // nand
+        result = ~(x & y);
+      b1000: // and
+        result = x & y;
+      b1001: // xnor
+        result = x ~^ y;
+      b1010: // x
+        result = x;
+      b1011: // imply
+        result = ~x | y;
+      b1100: // y
+        result = y;
+      b1101: // converse
+        result = x | ~y;
+      b1110: // or
+        result = x | y;
+      b1111: // 1
+        result = 16b1111111111111111;
+      default:
+        result = 16b0;
+    }
+  }
+}

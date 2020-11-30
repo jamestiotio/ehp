@@ -1,0 +1,21 @@
+module increment16 (
+    input x[16],
+    input y[16],
+    input alufn[6],
+    output s[16]
+  ) {
+
+  always {
+    // Increment x or y by 1 according to alufn[0]
+    case (alufn[0]) {
+      b0:
+        s = x + 1;
+
+      b1:
+        s = y + 1;
+
+      default:
+        s = 16b0;
+    }
+  }
+}

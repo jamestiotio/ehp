@@ -1,0 +1,39 @@
+module multiplier16 (
+    input x[16],
+    input y[16],
+    input alufn[6],
+    output s[16]
+  ) {
+
+  always {
+    // Multiplies (x*y), floor divides (x/y) or modulos (x%y) according to alufn[1:0]
+    case (alufn[1:0]) {
+      b00:
+        s = x * y;
+
+      b01:
+        if (y != 0) { // Avoid dividing by zero
+          s = x / y;
+        }
+
+        else {
+          s = x;
+        }
+      
+      b10:
+        s = 16b0;
+
+      b11:
+        if (y != 0) { // Avoid dividing by zero
+          s = x - ((x / y) * y);
+        }
+
+        else {
+          s = x;
+        }
+
+      default:
+        s = 16b0;
+    }
+  }
+}

@@ -1,0 +1,70 @@
+// au_top has two states: AUTO and MANUAL
+// au_top toggles between the states when io_button[2] is pressed
+
+module au_top (
+    input clk,              // 100MHz clock
+    input rst_n,            // reset button (active low)
+    output led [8],         // 8 user controllable LEDs
+    input usb_rx,           // USB->Serial input
+    output usb_tx,          // USB->Serial output
+    output io_led [3][8],   // LEDs on IO Shield
+    output io_seg [8],      // 7-segment LEDs on IO Shield
+    output io_sel [4],      // Digit select on IO Shield
+    input io_button [5],    // 5 buttons on IO Shield
+    input io_dip [3][8]     // DIP switches on IO Shield
+  ) {
+
+  sig rst; // reset signal
+  sig state_change; // Signal to switch between manual and automatic testing
+  sig start_auto_test; // Signal to start automatic testing
+
+  .clk(clk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+    button_conditioner button_cond;
+    edge_detector edge (#RISE(1), #FALL(0));
+
+    .rst(rst){
+      fsm state = {MANUAL, AUTOMATIC};
+      auto_tester auto_tester (.start(start_auto_test));
+      manual_tester manual_tester (.io_dip(io_dip), .state_change_btn(io_button[1]));
+    }
+  }
+
+  always {
+    reset_cond.in = ~rst_n; // input raw inverted reset signal
+    rst = reset_cond.out;   // conditioned reset
+
+    usb_tx = usb_rx;        // loop serial port
+
+    button_cond.in = io_button[2];
+    edge.in = button_cond.out;
+    state_change = edge.out;  
+
+    start_auto_test = 0;
+
+    io_led = 3x{{8h00}};    // turn LEDs off
+    io_seg = manual_tester.io_seg;
+    io_sel = manual_tester.io_sel;
+
+    case (state.q) {
+      state.MANUAL:
+        io_led = manual_tester.io_led;
+        if (state_change) {
+          state.d = state.AUTOMATIC;
+        }
+
+      state.AUTOMATIC:
+        io_seg = auto_tester.io_seg;
+        io_sel = auto_tester.io_sel;
+        io_led[2][5:0] = auto_tester.opcode_led; 
+        start_auto_test = 1;
+        if (state_change) {
+          state.d = state.MANUAL;
+        }
+    }
+
+    led = 8h00;             // turn LEDs off
+  }
+}
