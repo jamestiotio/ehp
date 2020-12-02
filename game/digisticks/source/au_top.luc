@@ -1,5 +1,5 @@
 // au_top has two states: GAMEPLAY and TESTING
-// au_top toggles between the states when io_button[1] is pressed
+// au_top toggles between the states when io_button[1] is pressed (since users/players should not be able to access TEST mode)
 
 module au_top (
     input clk,              // 100MHz clock
