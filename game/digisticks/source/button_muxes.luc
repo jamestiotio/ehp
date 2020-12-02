@@ -1,0 +1,53 @@
+module button_muxes (
+    //input clk,  // clock
+    //input rst,  // reset
+    
+    input p1_p1l,//p1l
+    input p2_p1l,
+    
+    input p1_p1r,//p1r
+    input p2_p1r,
+    
+    input p1_p2l,//p2l
+    input p2_p2l,
+    
+    input p1_p2r,//p2r
+    input p2_p2r,
+    
+    input p1_toggle,//toggle buttons
+    input p2_toggle,
+    
+    input p1_powerup,//powerup buttons
+    input p2_powerup,
+    
+    input turn,
+    
+    output p1l,
+    output p1r,
+    output p2l,
+    output p2r,
+    output toggle,
+    output powerup
+  ) {
+
+  always {
+    if (turn == 0){
+      p1l = p1_p1l;
+      p1r = p1_p1r;
+      p2l = p1_p2l;
+      p2r = p1_p2r;
+      
+      toggle = p1_toggle;
+      powerup = p1_powerup;  
+    }
+    else{
+      p1l = p2_p1l;
+      p1r = p2_p1r;
+      p2l = p2_p2l;
+      p2r = p2_p2r;
+      
+      toggle = p2_toggle;
+      powerup = p2_powerup;
+    }
+  }
+}

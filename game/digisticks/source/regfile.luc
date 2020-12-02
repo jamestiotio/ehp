@@ -1,0 +1,110 @@
+module regfile (
+    input clk,  // clock
+    input rst,  // reset
+    
+    input ra[4],
+    input rb[4],
+    input rc[4],
+    input data[16],
+    
+    output ra_data[16],
+    output rb_data[16],
+    
+    output from_out[16], //fixed outputs to control unit
+    output to_out[16],
+    output turn_out[16], //fixed output to button mux
+    
+    output player1left[16], //hands
+    output player1right[16],
+    output player2left[16],
+    output player2right[16],
+    
+    output literal_out[16],//or to 7seg? we prob need to take in state as an input as well
+    output powerup_out[16]
+  ) {
+  .clk(clk){
+    .rst(rst){
+      dff p1_right[16](#INIT(1));
+      dff p1_left[16](#INIT(1));
+      dff p2_right[16](#INIT(1));
+      dff p2_left[16](#INIT(1));
+      
+      dff p1_powerups[16](#INIT(3));
+      dff p2_powerups[16](#INIT(3));
+      
+      dff from[16];
+      dff to[16];
+      
+      dff literal[16];
+      dff powerup_chosen[16];
+      dff winner[16];
+      dff turn[16];
+    }
+  }
+  always {
+    //write port 
+    case(rc){
+      b0000: p1_right.d = data;
+      b0001: p1_left.d = data;
+      b0010: p2_right.d = data;
+      b0011: p2_left.d = data;
+      b0100: p1_powerups.d = data;
+      b0101: p2_powerups.d = data;
+      b0110: from.d = data;
+      b0111: to.d = data;
+      b1000: literal.d = data;
+      b1001: powerup_chosen.d = data;
+      b1010: winner.d=data;
+      b1011: turn.d = data;
+    }
+    
+    //read port a 
+    case(ra){
+      b0000: ra_data = p1_right.q;
+      b0001: ra_data = p1_left.q;
+      b0010: ra_data = p2_right.q;
+      b0011: ra_data = p2_left.q;
+      b0100: ra_data = p1_powerups.q;
+      b0101: ra_data = p2_powerups.q;
+      b0110: ra_data = from.q;
+      b0111: ra_data = to.q;
+      b1000: ra_data = literal.q;
+      b1001: ra_data = powerup_chosen.q;
+      b1010: ra_data = winner.q;
+      b1011: ra_data = turn.q;
+      default: ra_data = 0;
+    }
+    
+    //read port b
+    case(rb){
+      b0000: rb_data = p1_right.q;
+      b0001: rb_data = p1_left.q;
+      b0010: rb_data = p2_right.q;
+      b0011: rb_data = p2_left.q;
+      b0100: rb_data = p1_powerups.q;
+      b0101: rb_data = p2_powerups.q;
+      b0110: rb_data = from.q;
+      b0111: rb_data = to.q;
+      b1000: rb_data = literal.q;
+      b1001: rb_data = powerup_chosen.q;
+      b1010: rb_data = winner.q;
+      b1011: rb_data = turn.q;
+      default: rb_data = 0;
+    }
+    
+    //fixed read ports to control unit and button muxes
+    from_out = from.q;
+    to_out = to.q;
+    turn_out = turn.q;
+    
+    //fixed read ports for leds (hands)
+    player1left = p1_left.q;
+    player1right = p1_right.q;
+    player2left = p2_left.q;
+    player2right = p2_right.q;
+    
+    //fixed read ports for use in 7 segs
+    literal_out = literal.q;
+    powerup_out = powerup_chosen.q; // we need modules that take from split and powerup to show here
+  }
+}
