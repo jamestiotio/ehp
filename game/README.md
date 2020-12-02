@@ -18,3 +18,7 @@ Team 03-2:
 
 For our project, we digitalize this hand game and initiated some reworking and remodeling of the whole design process. We utilize the variant with remainders and transfers, with an additional extension of including boolean operations into the game (instead of just additions and modulos).
 
+## Future Work
+
+- Scoring system using persistent data
+- Audio player
