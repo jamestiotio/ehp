@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="digisticks" board="Alchitry Au" language="Lucid" version="3">
   <files>
-    <src>button_muxes.luc</src>
-    <src>sev_seg_out.luc</src>
-    <src>regfile.luc</src>
-    <src>increment16.luc</src>
-    <src>factorial.luc</src>
-    <src>decimal_counter.luc</src>
-    <src>game_cu.luc</src>
-    <src>adder16.luc</src>
     <src>decrement16.luc</src>
-    <src>multiplier16.luc</src>
-    <src>statement_tester.luc</src>
-    <src>shifter16.luc</src>
-    <src>seven_seg.luc</src>
-    <src>boolean16.luc</src>
-    <src>comparator16.luc</src>
-    <src>multi_dec_ctr.luc</src>
-    <src top="true">au_top.luc</src>
-    <src>manual_tester.luc</src>
-    <src>alu16.luc</src>
-    <src>multi_seven_seg.luc</src>
-    <src>auto_tester.luc</src>
-    <component>button_conditioner.luc</component>
+    <src>game_tester.luc</src>
+    <src>game_main_logic.luc</src>
+    <src>player_fsm.luc</src>
+    <src>factorial.luc</src>
     <component>pipeline.luc</component>
-    <component>edge_detector.luc</component>
-    <component>reset_conditioner.luc</component>
     <component>counter.luc</component>
+    <src>increment16.luc</src>
+    <src>boolean16.luc</src>
+    <src>game_cu.luc</src>
+    <src>multi_dec_ctr.luc</src>
+    <component>reset_conditioner.luc</component>
+    <src>comparator16.luc</src>
+    <component>button_conditioner.luc</component>
+    <src>seven_seg_out.luc</src>
+    <src>manual_tester.luc</src>
+    <src>statement_tester.luc</src>
+    <src>adder16.luc</src>
     <component>decoder.luc</component>
-    <constraint lib="true">au.xdc</constraint>
+    <src>auto_tester.luc</src>
+    <src top="true">au_top.luc</src>
+    <src>decimal_counter.luc</src>
+    <src>alu16.luc</src>
+    <src>button_muxes.luc</src>
+    <src>multi_seven_seg.luc</src>
+    <src>multiplier16.luc</src>
+    <src>shifter16.luc</src>
+    <component>edge_detector.luc</component>
+    <src>seven_seg.luc</src>
+    <src>game_regfile.luc</src>
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">io.acf</constraint>
+    <constraint lib="true">au.xdc</constraint>
   </files>
 </project>

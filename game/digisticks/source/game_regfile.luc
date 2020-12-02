@@ -1,4 +1,4 @@
-module regfile (
+module game_regfile (
     input clk,  // clock
     input rst,  // reset
     

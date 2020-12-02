@@ -1,0 +1,6 @@
+module game_tester (
+    input clk,
+    input rst
+) {
+    
+}

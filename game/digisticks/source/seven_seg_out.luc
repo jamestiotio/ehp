@@ -1,4 +1,4 @@
-module sev_seg_out (
+module seven_seg_out (
     input clk,  // clock
     input rst,  // reset
     

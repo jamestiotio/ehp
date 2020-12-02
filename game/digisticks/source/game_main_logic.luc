@@ -1,0 +1,6 @@
+module game_main_logic (
+  input clk,
+  input rst
+) {
+
+}
