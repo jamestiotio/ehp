@@ -6,6 +6,8 @@
 // The ERROR_2 state will display the letter "E" on the 7-segment seg_display
 
 module statement_tester #(
+    TEST_ID_HIGH,
+    TEST_ID_LOW,
     INPUT_X,
     INPUT_Y,
     OPCODE,
@@ -20,6 +22,12 @@ module statement_tester #(
     output done
   ) {
 
+  sig alufn[6];
+  sig x[16];
+  sig y[16];
+  sig id_high[4];
+  sig id_low[4];
+
   .clk(clk) {
     edge_detector slow_clk_edge (#RISE(1), #FALL(0));
 
@@ -28,13 +36,9 @@ module statement_tester #(
       dff out[16];
       counter slow_clock (#SIZE(1), #DIV(25)); // Clock with a period of about 0.65 seconds
       multi_seven_seg seg_display;
+      alu16 alu (.alufn(alufn), .x(x), .y(y)); // We need CLK and RST for ALU for factorial functionality
     }
   }
-
-  sig alufn[6];
-  sig x[16];
-  sig y[16];
-  alu16 alu (.alufn(alufn), .x(x), .y(y));
 
   always {
     done = 0;
@@ -46,18 +50,23 @@ module statement_tester #(
     alufn = OPCODE;
     x = INPUT_X;
     y = INPUT_Y;
+    id_high = TEST_ID_HIGH;
+    id_low = TEST_ID_LOW;
     out.d = alu.out;
 
     opcode_led = OPCODE;
 
     case (state.q) {
       state.INIT:
-        if (start) {
+        seg_display.values = {4hc, 4h5, id_high, id_low}; // CS##, where ## is the test case ID number in decimal
+        io_seg = ~seg_display.seg;
+        io_sel = ~seg_display.sel;
+        if (start && slow_clk_edge.out) {
           state.d = state.DISP_X_1;
         }
 
       state.DISP_X_1:
-        io_seg = 8b10001001;
+        io_seg = 8b10001001; // X
         io_sel = 4b1110;
         if (slow_clk_edge.out) {
           state.d = state.DISP_X_2;
@@ -72,7 +81,7 @@ module statement_tester #(
         }
 
       state.DISP_Y_1:
-        io_seg = 8b10010001;
+        io_seg = 8b10010001; // y
         io_sel = 4b1110;
         if (slow_clk_edge.out) {
           state.d = state.DISP_Y_2;
@@ -87,7 +96,7 @@ module statement_tester #(
         }
 
       state.DISP_OUT_1:
-        io_seg = 8b11000000;
+        io_seg = 8b10100011; // o
         io_sel = 4b1110;
         if (slow_clk_edge.out) {
           state.d = state.DISP_OUT_2;

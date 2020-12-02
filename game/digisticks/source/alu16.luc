@@ -1,17 +1,22 @@
 // This is the main 16-Bit ALU module
 
 module alu16 (
+    input clk,
+    input rst,
     input alufn[6],
     input x[16],
     input y[16],
     output out[16],
     output z,
     output v,
-    output n
+    output n,
+    output err
   ) {
 
   // Initialise modules
-  adder16 addormul16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  .clk(clk), .rst(rst) {
+      adder16 addormul16 (.x(x), .y(y), .alufn(alufn[5:0]));
+  }
   boolean16 boolean16 (.x(x), .y(y), .alufn(alufn[5:0]));
   shifter16 shifter16 (.x(x), .y(y), .alufn(alufn[5:0]));
   comparator16 comparator16 (.x(x), .y(y), .alufn(alufn[5:0]));
@@ -22,6 +27,8 @@ module alu16 (
     v = 0;
     n = 0;
 
+    err = 0;
+
     // Select output of ALU based on alufn
     case (alufn[5:4]) {
       b00:
@@ -29,6 +36,7 @@ module alu16 (
         z = addormul16.z;
         v = addormul16.v;
         n = addormul16.n;
+        err = addormul16.err;
 
       b01:
         out = boolean16.result;

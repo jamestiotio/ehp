@@ -9,83 +9,120 @@ module auto_tester (
     input clk,  // clock
     input rst,  // reset
     input start,
+    input restart_btn,
+    input forced_error,
     output io_seg[8],
     output io_sel[4],
     output opcode_led[6]
   ) {
-  
+
   .clk(clk) {
+    button_conditioner button_cond;
+    edge_detector edge (#RISE(1), #FALL(0));
+    button_conditioner required_error;
+    edge_detector error_edge (#RISE(1), #FALL(0));
+
     .rst(rst) {
-      fsm autostate = {STANDBY, TEST_0, TEST_1, TEST_2, TEST_3, TEST_4, TEST_5, TEST_6, TEST_7, TEST_8, TEST_9, TEST_10, TEST_11, TEST_12, TEST_13, TEST_14, TEST_15, TEST_16, TEST_17, TEST_18, TEST_19, TEST_20, TEST_21, TEST_22, TEST_23, TEST_24, TEST_25, TEST_26, TEST_27, TEST_28, TEST_29, TEST_30, TEST_31, TEST_32, TEST_33, TEST_34, TEST_35, TEST_36, TEST_37, TEST_38, TEST_39, TEST_40, TEST_41, TEST_42, TEST_43, TEST_44, TEST_45, TEST_46, TEST_47, TEST_48, TEST_49, TEST_50, TEST_51, TEST_52, TEST_53, TEST_54, TEST_55, TEST_56, TEST_57, TEST_58, TEST_59, TEST_60, TEST_61};
-      statement_tester test_0 (#INPUT_X(16habcd), #INPUT_Y(16hef42), #OPCODE(6b000000), #EXPECTED_OUTPUT(16h9b0f)); 
-      statement_tester test_1 (#INPUT_X(16h0369), #INPUT_Y(16h0369), #OPCODE(6b000000), #EXPECTED_OUTPUT(16h06d2)); 
-      statement_tester test_2 (#INPUT_X(16h0369), #INPUT_Y(16h0000), #OPCODE(6b000001), #EXPECTED_OUTPUT(16h0369)); 
-      statement_tester test_3 (#INPUT_X(16habcd), #INPUT_Y(16habcd), #OPCODE(6b000001), #EXPECTED_OUTPUT(16h0000)); 
-      statement_tester test_4 (#INPUT_X(16h7fff), #INPUT_Y(16h7fff), #OPCODE(6b000100), #EXPECTED_OUTPUT(16h0001)); 
-      statement_tester test_5 (#INPUT_X(16h7fff), #INPUT_Y(16h0000), #OPCODE(6b000100), #EXPECTED_OUTPUT(16h0000)); 
-      statement_tester test_6 (#INPUT_X(16h0420), #INPUT_Y(16h0069), #OPCODE(6b000101), #EXPECTED_OUTPUT(16h000a)); 
-      statement_tester test_7 (#INPUT_X(16h0069), #INPUT_Y(16h0000), #OPCODE(6b000101), #EXPECTED_OUTPUT(16h0069)); 
-      statement_tester test_8 (#INPUT_X(16h0420), #INPUT_Y(16h0069), #OPCODE(6b000111), #EXPECTED_OUTPUT(16h0006)); 
-      statement_tester test_9 (#INPUT_X(16h0069), #INPUT_Y(16h0000), #OPCODE(6b000111), #EXPECTED_OUTPUT(16h0069)); 
-      statement_tester test_10 (#INPUT_X(16h1970), #INPUT_Y(16hffff), #OPCODE(6b001000), #EXPECTED_OUTPUT(16h1971));
-      statement_tester test_11 (#INPUT_X(16hffff), #INPUT_Y(16habab), #OPCODE(6b001000), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_12 (#INPUT_X(16h1970), #INPUT_Y(16hffff), #OPCODE(6b001001), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_13 (#INPUT_X(16hffff), #INPUT_Y(16habab), #OPCODE(6b001001), #EXPECTED_OUTPUT(16habac));
-      statement_tester test_14 (#INPUT_X(16h1970), #INPUT_Y(16h0000), #OPCODE(6b001100), #EXPECTED_OUTPUT(16h196f));
-      statement_tester test_15 (#INPUT_X(16h0000), #INPUT_Y(16habab), #OPCODE(6b001100), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_16 (#INPUT_X(16h1970), #INPUT_Y(16h0000), #OPCODE(6b001101), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_17 (#INPUT_X(16h0000), #INPUT_Y(16habab), #OPCODE(6b001101), #EXPECTED_OUTPUT(16habaa));
-      statement_tester test_18 (#INPUT_X(16habcd), #INPUT_Y(16hdede), #OPCODE(6b010000), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_19 (#INPUT_X(16h2f2f), #INPUT_Y(16h0101), #OPCODE(6b010000), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_20 (#INPUT_X(16h2af0), #INPUT_Y(16hafe0), #OPCODE(6b010001), #EXPECTED_OUTPUT(16h500f));
-      statement_tester test_21 (#INPUT_X(16hff00), #INPUT_Y(16h00ff), #OPCODE(6b010001), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_22 (#INPUT_X(16h3636), #INPUT_Y(16h2035), #OPCODE(6b010010), #EXPECTED_OUTPUT(16h0001));
-      statement_tester test_23 (#INPUT_X(16hffff), #INPUT_Y(16heeee), #OPCODE(6b010010), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_24 (#INPUT_X(16h2140), #INPUT_Y(16hf0f0), #OPCODE(6b010011), #EXPECTED_OUTPUT(16hdebf));
-      statement_tester test_25 (#INPUT_X(16h8c67), #INPUT_Y(16h0f0f), #OPCODE(6b010011), #EXPECTED_OUTPUT(16h7398));
-      statement_tester test_26 (#INPUT_X(16h2345), #INPUT_Y(16h6789), #OPCODE(6b010100), #EXPECTED_OUTPUT(16h0044));
-      statement_tester test_27 (#INPUT_X(16h1357), #INPUT_Y(16h2468), #OPCODE(6b010100), #EXPECTED_OUTPUT(16h1317));
-      statement_tester test_28 (#INPUT_X(16hf0f0), #INPUT_Y(16h2140), #OPCODE(6b010101), #EXPECTED_OUTPUT(16hdebf));
-      statement_tester test_29 (#INPUT_X(16h0f0f), #INPUT_Y(16h8c67), #OPCODE(6b010101), #EXPECTED_OUTPUT(16h7398));
-      statement_tester test_30 (#INPUT_X(16hffff), #INPUT_Y(16hffff), #OPCODE(6b010110), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_31 (#INPUT_X(16hffff), #INPUT_Y(16h0000), #OPCODE(6b010110), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_32 (#INPUT_X(16h2af0), #INPUT_Y(16hafe0), #OPCODE(6b010111), #EXPECTED_OUTPUT(16hd51f));
-      statement_tester test_33 (#INPUT_X(16hff00), #INPUT_Y(16h00ff), #OPCODE(6b010111), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_34 (#INPUT_X(16h0000), #INPUT_Y(16hffff), #OPCODE(6b011000), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_35 (#INPUT_X(16hffff), #INPUT_Y(16hffff), #OPCODE(6b011000), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_36 (#INPUT_X(16h2af0), #INPUT_Y(16hafe0), #OPCODE(6b011001), #EXPECTED_OUTPUT(16h7aef));
-      statement_tester test_37 (#INPUT_X(16hff00), #INPUT_Y(16h00ff), #OPCODE(6b011001), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_38 (#INPUT_X(16h2121), #INPUT_Y(16h4242), #OPCODE(6b011010), #EXPECTED_OUTPUT(16h2121));
-      statement_tester test_39 (#INPUT_X(16h4242), #INPUT_Y(16h4242), #OPCODE(6b011010), #EXPECTED_OUTPUT(16h4242));
-      statement_tester test_40 (#INPUT_X(16h58ae), #INPUT_Y(16he249), #OPCODE(6b011011), #EXPECTED_OUTPUT(16he759));
-      statement_tester test_41 (#INPUT_X(16h10cf), #INPUT_Y(16h79a5), #OPCODE(6b011011), #EXPECTED_OUTPUT(16hffb5));
-      statement_tester test_42 (#INPUT_X(16h4242), #INPUT_Y(16h2121), #OPCODE(6b011100), #EXPECTED_OUTPUT(16h2121));
-      statement_tester test_43 (#INPUT_X(16h4242), #INPUT_Y(16h4242), #OPCODE(6b011100), #EXPECTED_OUTPUT(16h4242));
-      statement_tester test_44 (#INPUT_X(16h2979), #INPUT_Y(16h3945), #OPCODE(6b011101), #EXPECTED_OUTPUT(16heffb));
-      statement_tester test_45 (#INPUT_X(16hfbfb), #INPUT_Y(16hacac), #OPCODE(6b011101), #EXPECTED_OUTPUT(16hfbfb));
-      statement_tester test_46 (#INPUT_X(16h0000), #INPUT_Y(16hffff), #OPCODE(6b011110), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_47 (#INPUT_X(16h0001), #INPUT_Y(16h0010), #OPCODE(6b011110), #EXPECTED_OUTPUT(16h0011));
-      statement_tester test_48 (#INPUT_X(16h2e45), #INPUT_Y(16h1984), #OPCODE(6b011111), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_49 (#INPUT_X(16hadef), #INPUT_Y(16h2000), #OPCODE(6b011111), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_50 (#INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100000), #EXPECTED_OUTPUT(16hfffe));
-      statement_tester test_51 (#INPUT_X(16hffff), #INPUT_Y(16h0008), #OPCODE(6b100000), #EXPECTED_OUTPUT(16hff00));
-      statement_tester test_52 (#INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100001), #EXPECTED_OUTPUT(16h7fff));
-      statement_tester test_53 (#INPUT_X(16hffff), #INPUT_Y(16h0008), #OPCODE(6b100001), #EXPECTED_OUTPUT(16h00ff));
-      statement_tester test_54 (#INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100011), #EXPECTED_OUTPUT(16hffff));
-      statement_tester test_55 (#INPUT_X(16h3fff), #INPUT_Y(16h0008), #OPCODE(6b100011), #EXPECTED_OUTPUT(16h003f));
-      statement_tester test_56 (#INPUT_X(16h7fff), #INPUT_Y(16h7fff), #OPCODE(6b110011), #EXPECTED_OUTPUT(16h0001));
-      statement_tester test_57 (#INPUT_X(16h7fff), #INPUT_Y(16h0000), #OPCODE(6b110011), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_58 (#INPUT_X(16h7fff), #INPUT_Y(16h7fff), #OPCODE(6b110101), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_59 (#INPUT_X(16h0000), #INPUT_Y(16h7fff), #OPCODE(6b110101), #EXPECTED_OUTPUT(16h0001));
-      statement_tester test_60 (#INPUT_X(16h7fff), #INPUT_Y(16h0000), #OPCODE(6b110111), #EXPECTED_OUTPUT(16h0000));
-      statement_tester test_61 (#INPUT_X(16h2121), #INPUT_Y(16h2121), #OPCODE(6b110111), #EXPECTED_OUTPUT(16h0001));
+      multi_seven_seg seg_display;
+      fsm autostate = {STANDBY, TEST_0, TEST_1, TEST_2, TEST_3, TEST_4, TEST_5, TEST_6, TEST_7, TEST_8, TEST_9, TEST_10, TEST_11, TEST_12, TEST_13, TEST_14, TEST_15, TEST_16, TEST_17, TEST_18, TEST_19, TEST_20, TEST_21, TEST_22, TEST_23, TEST_24, TEST_25, TEST_26, TEST_27, TEST_28, TEST_29, TEST_30, TEST_31, TEST_32, TEST_33, TEST_34, TEST_35, TEST_36, TEST_37, TEST_38, TEST_39, TEST_40, TEST_41, TEST_42, TEST_43, TEST_44, TEST_45, TEST_46, TEST_47, TEST_48, TEST_49, TEST_50, TEST_51, TEST_52, TEST_53, TEST_54, TEST_55, TEST_56, TEST_57, TEST_58, TEST_59, TEST_60, TEST_61, TEST_62, TEST_63, TEST_64, TEST_65, TEST_66, TEST_67, TEST_68, TEST_69, TEST_70, TEST_71, TEST_72, TEST_73, TEST_74, TEST_75, TEST_76, TEST_77, DONE, ERROR};
+      statement_tester test_0 (#TEST_ID_HIGH(0), #TEST_ID_LOW(0), #INPUT_X(16habcd), #INPUT_Y(16hef42), #OPCODE(6b000000), #EXPECTED_OUTPUT(16h9b0f));
+      statement_tester test_1 (#TEST_ID_HIGH(0), #TEST_ID_LOW(1), #INPUT_X(16h0369), #INPUT_Y(16h0369), #OPCODE(6b000000), #EXPECTED_OUTPUT(16h06d2));
+      statement_tester test_2 (#TEST_ID_HIGH(0), #TEST_ID_LOW(2), #INPUT_X(16h0369), #INPUT_Y(16h0000), #OPCODE(6b000001), #EXPECTED_OUTPUT(16h0369));
+      statement_tester test_3 (#TEST_ID_HIGH(0), #TEST_ID_LOW(3), #INPUT_X(16habcd), #INPUT_Y(16habcd), #OPCODE(6b000001), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_4 (#TEST_ID_HIGH(0), #TEST_ID_LOW(4), #INPUT_X(16h7fff), #INPUT_Y(16h7fff), #OPCODE(6b000100), #EXPECTED_OUTPUT(16h0001));
+      statement_tester test_5 (#TEST_ID_HIGH(0), #TEST_ID_LOW(5), #INPUT_X(16h7fff), #INPUT_Y(16h0000), #OPCODE(6b000100), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_6 (#TEST_ID_HIGH(0), #TEST_ID_LOW(6), #INPUT_X(16h0420), #INPUT_Y(16h0069), #OPCODE(6b000101), #EXPECTED_OUTPUT(16h000a));
+      statement_tester test_7 (#TEST_ID_HIGH(0), #TEST_ID_LOW(7), #INPUT_X(16h0069), #INPUT_Y(16h0000), #OPCODE(6b000101), #EXPECTED_OUTPUT(16h0069));
+      statement_tester test_8 (#TEST_ID_HIGH(0), #TEST_ID_LOW(8), #INPUT_X(16hfff3), #INPUT_Y(16h0005), #OPCODE(6b000110), #EXPECTED_OUTPUT(16h0002));
+      statement_tester test_9 (#TEST_ID_HIGH(0), #TEST_ID_LOW(9), #INPUT_X(16h0369), #INPUT_Y(16hff28), #OPCODE(6b000110), #EXPECTED_OUTPUT(16hff31));
+      statement_tester test_10 (#TEST_ID_HIGH(1), #TEST_ID_LOW(0), #INPUT_X(16hfff2), #INPUT_Y(16hfff3), #OPCODE(6b000110), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_11 (#TEST_ID_HIGH(1), #TEST_ID_LOW(1), #INPUT_X(16h03e8), #INPUT_Y(16h0369), #OPCODE(6b000110), #EXPECTED_OUTPUT(16h007f));
+      statement_tester test_12 (#TEST_ID_HIGH(1), #TEST_ID_LOW(2), #INPUT_X(16h0420), #INPUT_Y(16h0069), #OPCODE(6b000111), #EXPECTED_OUTPUT(16h0006));
+      statement_tester test_13 (#TEST_ID_HIGH(1), #TEST_ID_LOW(3), #INPUT_X(16h0069), #INPUT_Y(16h0000), #OPCODE(6b000111), #EXPECTED_OUTPUT(16h0069));
+      statement_tester test_14 (#TEST_ID_HIGH(1), #TEST_ID_LOW(4), #INPUT_X(16h1970), #INPUT_Y(16hffff), #OPCODE(6b001000), #EXPECTED_OUTPUT(16h1971));
+      statement_tester test_15 (#TEST_ID_HIGH(1), #TEST_ID_LOW(5), #INPUT_X(16hffff), #INPUT_Y(16habab), #OPCODE(6b001000), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_16 (#TEST_ID_HIGH(1), #TEST_ID_LOW(6), #INPUT_X(16h1970), #INPUT_Y(16hffff), #OPCODE(6b001001), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_17 (#TEST_ID_HIGH(1), #TEST_ID_LOW(7), #INPUT_X(16hffff), #INPUT_Y(16habab), #OPCODE(6b001001), #EXPECTED_OUTPUT(16habac));
+      statement_tester test_18 (#TEST_ID_HIGH(1), #TEST_ID_LOW(8), #INPUT_X(16h1970), #INPUT_Y(16h0000), #OPCODE(6b001010), #EXPECTED_OUTPUT(16h196f));
+      statement_tester test_19 (#TEST_ID_HIGH(1), #TEST_ID_LOW(9), #INPUT_X(16h0000), #INPUT_Y(16habab), #OPCODE(6b001010), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_20 (#TEST_ID_HIGH(2), #TEST_ID_LOW(0), #INPUT_X(16h1970), #INPUT_Y(16h0000), #OPCODE(6b001011), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_21 (#TEST_ID_HIGH(2), #TEST_ID_LOW(1), #INPUT_X(16h0000), #INPUT_Y(16habab), #OPCODE(6b001011), #EXPECTED_OUTPUT(16habaa));
+      statement_tester test_22 (#TEST_ID_HIGH(2), #TEST_ID_LOW(2), #INPUT_X(16h0000), #INPUT_Y(16hffff), #OPCODE(6b001100), #EXPECTED_OUTPUT(16h0001));
+      statement_tester test_23 (#TEST_ID_HIGH(2), #TEST_ID_LOW(3), #INPUT_X(16h0005), #INPUT_Y(16h0000), #OPCODE(6b001100), #EXPECTED_OUTPUT(16h0078));
+      statement_tester test_24 (#TEST_ID_HIGH(2), #TEST_ID_LOW(4), #INPUT_X(16habcd), #INPUT_Y(16hdede), #OPCODE(6b010000), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_25 (#TEST_ID_HIGH(2), #TEST_ID_LOW(5), #INPUT_X(16h2f2f), #INPUT_Y(16h0101), #OPCODE(6b010000), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_26 (#TEST_ID_HIGH(2), #TEST_ID_LOW(6), #INPUT_X(16h2af0), #INPUT_Y(16hafe0), #OPCODE(6b010001), #EXPECTED_OUTPUT(16h500f));
+      statement_tester test_27 (#TEST_ID_HIGH(2), #TEST_ID_LOW(7), #INPUT_X(16hff00), #INPUT_Y(16h00ff), #OPCODE(6b010001), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_28 (#TEST_ID_HIGH(2), #TEST_ID_LOW(8), #INPUT_X(16h3636), #INPUT_Y(16h2035), #OPCODE(6b010010), #EXPECTED_OUTPUT(16h0001));
+      statement_tester test_29 (#TEST_ID_HIGH(2), #TEST_ID_LOW(9), #INPUT_X(16hffff), #INPUT_Y(16heeee), #OPCODE(6b010010), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_30 (#TEST_ID_HIGH(3), #TEST_ID_LOW(0), #INPUT_X(16h2140), #INPUT_Y(16hf0f0), #OPCODE(6b010011), #EXPECTED_OUTPUT(16hdebf));
+      statement_tester test_31 (#TEST_ID_HIGH(3), #TEST_ID_LOW(1), #INPUT_X(16h8c67), #INPUT_Y(16h0f0f), #OPCODE(6b010011), #EXPECTED_OUTPUT(16h7398));
+      statement_tester test_32 (#TEST_ID_HIGH(3), #TEST_ID_LOW(2), #INPUT_X(16h2345), #INPUT_Y(16h6789), #OPCODE(6b010100), #EXPECTED_OUTPUT(16h0044));
+      statement_tester test_33 (#TEST_ID_HIGH(3), #TEST_ID_LOW(3), #INPUT_X(16h1357), #INPUT_Y(16h2468), #OPCODE(6b010100), #EXPECTED_OUTPUT(16h1317));
+      statement_tester test_34 (#TEST_ID_HIGH(3), #TEST_ID_LOW(4), #INPUT_X(16hf0f0), #INPUT_Y(16h2140), #OPCODE(6b010101), #EXPECTED_OUTPUT(16hdebf));
+      statement_tester test_35 (#TEST_ID_HIGH(3), #TEST_ID_LOW(5), #INPUT_X(16h0f0f), #INPUT_Y(16h8c67), #OPCODE(6b010101), #EXPECTED_OUTPUT(16h7398));
+      statement_tester test_36 (#TEST_ID_HIGH(3), #TEST_ID_LOW(6), #INPUT_X(16hffff), #INPUT_Y(16hffff), #OPCODE(6b010110), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_37 (#TEST_ID_HIGH(3), #TEST_ID_LOW(7), #INPUT_X(16hffff), #INPUT_Y(16h0000), #OPCODE(6b010110), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_38 (#TEST_ID_HIGH(3), #TEST_ID_LOW(8), #INPUT_X(16h2af0), #INPUT_Y(16hafe0), #OPCODE(6b010111), #EXPECTED_OUTPUT(16hd51f));
+      statement_tester test_39 (#TEST_ID_HIGH(3), #TEST_ID_LOW(9), #INPUT_X(16hff00), #INPUT_Y(16h00ff), #OPCODE(6b010111), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_40 (#TEST_ID_HIGH(4), #TEST_ID_LOW(0), #INPUT_X(16h0000), #INPUT_Y(16hffff), #OPCODE(6b011000), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_41 (#TEST_ID_HIGH(4), #TEST_ID_LOW(1), #INPUT_X(16hffff), #INPUT_Y(16hffff), #OPCODE(6b011000), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_42 (#TEST_ID_HIGH(4), #TEST_ID_LOW(2), #INPUT_X(16h2af0), #INPUT_Y(16hafe0), #OPCODE(6b011001), #EXPECTED_OUTPUT(16h7aef));
+      statement_tester test_43 (#TEST_ID_HIGH(4), #TEST_ID_LOW(3), #INPUT_X(16hff00), #INPUT_Y(16h00ff), #OPCODE(6b011001), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_44 (#TEST_ID_HIGH(4), #TEST_ID_LOW(4), #INPUT_X(16h2121), #INPUT_Y(16h4242), #OPCODE(6b011010), #EXPECTED_OUTPUT(16h2121));
+      statement_tester test_45 (#TEST_ID_HIGH(4), #TEST_ID_LOW(5), #INPUT_X(16h4242), #INPUT_Y(16h4242), #OPCODE(6b011010), #EXPECTED_OUTPUT(16h4242));
+      statement_tester test_46 (#TEST_ID_HIGH(4), #TEST_ID_LOW(6), #INPUT_X(16h58ae), #INPUT_Y(16he249), #OPCODE(6b011011), #EXPECTED_OUTPUT(16he759));
+      statement_tester test_47 (#TEST_ID_HIGH(4), #TEST_ID_LOW(7), #INPUT_X(16h10cf), #INPUT_Y(16h79a5), #OPCODE(6b011011), #EXPECTED_OUTPUT(16hffb5));
+      statement_tester test_48 (#TEST_ID_HIGH(4), #TEST_ID_LOW(8), #INPUT_X(16h4242), #INPUT_Y(16h2121), #OPCODE(6b011100), #EXPECTED_OUTPUT(16h2121));
+      statement_tester test_49 (#TEST_ID_HIGH(4), #TEST_ID_LOW(9), #INPUT_X(16h4242), #INPUT_Y(16h4242), #OPCODE(6b011100), #EXPECTED_OUTPUT(16h4242));
+      statement_tester test_50 (#TEST_ID_HIGH(5), #TEST_ID_LOW(0), #INPUT_X(16h2979), #INPUT_Y(16h3945), #OPCODE(6b011101), #EXPECTED_OUTPUT(16heffb));
+      statement_tester test_51 (#TEST_ID_HIGH(5), #TEST_ID_LOW(1), #INPUT_X(16hfbfb), #INPUT_Y(16hacac), #OPCODE(6b011101), #EXPECTED_OUTPUT(16hfbfb));
+      statement_tester test_52 (#TEST_ID_HIGH(5), #TEST_ID_LOW(2), #INPUT_X(16h0000), #INPUT_Y(16hffff), #OPCODE(6b011110), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_53 (#TEST_ID_HIGH(5), #TEST_ID_LOW(3), #INPUT_X(16h0001), #INPUT_Y(16h0010), #OPCODE(6b011110), #EXPECTED_OUTPUT(16h0011));
+      statement_tester test_54 (#TEST_ID_HIGH(5), #TEST_ID_LOW(4), #INPUT_X(16h2e45), #INPUT_Y(16h1984), #OPCODE(6b011111), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_55 (#TEST_ID_HIGH(5), #TEST_ID_LOW(5), #INPUT_X(16hadef), #INPUT_Y(16h2000), #OPCODE(6b011111), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_56 (#TEST_ID_HIGH(5), #TEST_ID_LOW(6), #INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100000), #EXPECTED_OUTPUT(16hfffe));
+      statement_tester test_57 (#TEST_ID_HIGH(5), #TEST_ID_LOW(7), #INPUT_X(16hffff), #INPUT_Y(16h0008), #OPCODE(6b100000), #EXPECTED_OUTPUT(16hff00));
+      statement_tester test_58 (#TEST_ID_HIGH(5), #TEST_ID_LOW(8), #INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100001), #EXPECTED_OUTPUT(16h7fff));
+      statement_tester test_59 (#TEST_ID_HIGH(5), #TEST_ID_LOW(9), #INPUT_X(16hffff), #INPUT_Y(16h0008), #OPCODE(6b100001), #EXPECTED_OUTPUT(16h00ff));
+      statement_tester test_60 (#TEST_ID_HIGH(6), #TEST_ID_LOW(0), #INPUT_X(16hffff), #INPUT_Y(16h0001), #OPCODE(6b100011), #EXPECTED_OUTPUT(16hffff));
+      statement_tester test_61 (#TEST_ID_HIGH(6), #TEST_ID_LOW(1), #INPUT_X(16h3fff), #INPUT_Y(16h0008), #OPCODE(6b100011), #EXPECTED_OUTPUT(16h003f));
+      statement_tester test_62 (#TEST_ID_HIGH(6), #TEST_ID_LOW(2), #INPUT_X(16hf0f0), #INPUT_Y(16h0004), #OPCODE(6b100100), #EXPECTED_OUTPUT(16h0f0f));
+      statement_tester test_63 (#TEST_ID_HIGH(6), #TEST_ID_LOW(3), #INPUT_X(16h10ad), #INPUT_Y(16h0007), #OPCODE(6b100100), #EXPECTED_OUTPUT(16h5688));
+      statement_tester test_64 (#TEST_ID_HIGH(6), #TEST_ID_LOW(4), #INPUT_X(16hf0f0), #INPUT_Y(16h0004), #OPCODE(6b100101), #EXPECTED_OUTPUT(16h0f0f));
+      statement_tester test_65 (#TEST_ID_HIGH(6), #TEST_ID_LOW(5), #INPUT_X(16h10ad), #INPUT_Y(16h0007), #OPCODE(6b100101), #EXPECTED_OUTPUT(16he1e1));
+      statement_tester test_66 (#TEST_ID_HIGH(6), #TEST_ID_LOW(6), #INPUT_X(16hb544), #INPUT_Y(16h0000), #OPCODE(6b101100), #EXPECTED_OUTPUT(16h22ad));
+      statement_tester test_67 (#TEST_ID_HIGH(6), #TEST_ID_LOW(7), #INPUT_X(16h1092), #INPUT_Y(16hffff), #OPCODE(6b101100), #EXPECTED_OUTPUT(16h4908));
+      statement_tester test_68 (#TEST_ID_HIGH(6), #TEST_ID_LOW(8), #INPUT_X(16h7fff), #INPUT_Y(16h7fff), #OPCODE(6b110011), #EXPECTED_OUTPUT(16h0001));
+      statement_tester test_69 (#TEST_ID_HIGH(6), #TEST_ID_LOW(9), #INPUT_X(16h7fff), #INPUT_Y(16h0000), #OPCODE(6b110011), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_70 (#TEST_ID_HIGH(7), #TEST_ID_LOW(0), #INPUT_X(16h7fff), #INPUT_Y(16h7fff), #OPCODE(6b110101), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_71 (#TEST_ID_HIGH(7), #TEST_ID_LOW(1), #INPUT_X(16h0000), #INPUT_Y(16h7fff), #OPCODE(6b110101), #EXPECTED_OUTPUT(16h0001));
+      statement_tester test_72 (#TEST_ID_HIGH(7), #TEST_ID_LOW(2), #INPUT_X(16h7fff), #INPUT_Y(16h0000), #OPCODE(6b110111), #EXPECTED_OUTPUT(16h0000));
+      statement_tester test_73 (#TEST_ID_HIGH(7), #TEST_ID_LOW(3), #INPUT_X(16h2121), #INPUT_Y(16h2121), #OPCODE(6b110111), #EXPECTED_OUTPUT(16h0001));
+      statement_tester test_74 (#TEST_ID_HIGH(7), #TEST_ID_LOW(4), #INPUT_X(16h23f4), #INPUT_Y(16h0001), #OPCODE(6b111011), #EXPECTED_OUTPUT(16h23f4));
+      statement_tester test_75 (#TEST_ID_HIGH(7), #TEST_ID_LOW(5), #INPUT_X(16h0202), #INPUT_Y(16hf007), #OPCODE(6b111011), #EXPECTED_OUTPUT(16hf007));
+      statement_tester test_76 (#TEST_ID_HIGH(7), #TEST_ID_LOW(6), #INPUT_X(16hc103), #INPUT_Y(16hc102), #OPCODE(6b111101), #EXPECTED_OUTPUT(16hc102));
+      statement_tester test_77 (#TEST_ID_HIGH(7), #TEST_ID_LOW(7), #INPUT_X(16hffff), #INPUT_Y(16hffff), #OPCODE(6b111101), #EXPECTED_OUTPUT(16hffff));
     }
   }
+
+  sig restart;
+  sig compulsory_error;
 
   always {
     io_seg = 0;
     io_sel = 0;
     opcode_led = 0;
+
+    button_cond.in = restart_btn;
+    edge.in = button_cond.out;
+    restart = edge.out;
+
+    required_error.in = forced_error;
+    error_edge.in = required_error.out;
+    compulsory_error = error_edge.out;
+
+    seg_display.values = {4b0,4b0,4b0,4b0};
 
     test_0.start = 0;
     test_1.start = 0;
@@ -149,6 +186,22 @@ module auto_tester (
     test_59.start = 0;
     test_60.start = 0;
     test_61.start = 0;
+    test_62.start = 0;
+    test_63.start = 0;
+    test_64.start = 0;
+    test_65.start = 0;
+    test_66.start = 0;
+    test_67.start = 0;
+    test_68.start = 0;
+    test_69.start = 0;
+    test_70.start = 0;
+    test_71.start = 0;
+    test_72.start = 0;
+    test_73.start = 0;
+    test_74.start = 0;
+    test_75.start = 0;
+    test_76.start = 0;
+    test_77.start = 0;
 
     case (autostate.q) {
       autostate.STANDBY:
@@ -164,6 +217,9 @@ module auto_tester (
         if (test_0.done) {
           autostate.d = autostate.TEST_1;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_1:
         io_seg = test_1.io_seg;
@@ -172,6 +228,9 @@ module auto_tester (
         test_1.start = 1;
         if (test_1.done) {
           autostate.d = autostate.TEST_2;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_2:
@@ -182,6 +241,9 @@ module auto_tester (
         if (test_2.done) {
           autostate.d = autostate.TEST_3;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_3:
         io_seg = test_3.io_seg;
@@ -190,6 +252,9 @@ module auto_tester (
         test_3.start = 1;
         if (test_3.done) {
           autostate.d = autostate.TEST_4;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_4:
@@ -200,6 +265,9 @@ module auto_tester (
         if (test_4.done) {
           autostate.d = autostate.TEST_5;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_5:
         io_seg = test_5.io_seg;
@@ -208,6 +276,9 @@ module auto_tester (
         test_5.start = 1;
         if (test_5.done) {
           autostate.d = autostate.TEST_6;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_6:
@@ -218,6 +289,9 @@ module auto_tester (
         if (test_6.done) {
           autostate.d = autostate.TEST_7;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_7:
         io_seg = test_7.io_seg;
@@ -226,6 +300,9 @@ module auto_tester (
         test_7.start = 1;
         if (test_7.done) {
           autostate.d = autostate.TEST_8;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_8:
@@ -236,6 +313,9 @@ module auto_tester (
         if (test_8.done) {
           autostate.d = autostate.TEST_9;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_9:
         io_seg = test_9.io_seg;
@@ -244,6 +324,9 @@ module auto_tester (
         test_9.start = 1;
         if (test_9.done) {
           autostate.d = autostate.TEST_10;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_10:
@@ -254,6 +337,9 @@ module auto_tester (
         if (test_10.done) {
           autostate.d = autostate.TEST_11;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_11:
         io_seg = test_11.io_seg;
@@ -262,6 +348,9 @@ module auto_tester (
         test_11.start = 1;
         if (test_11.done) {
           autostate.d = autostate.TEST_12;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_12:
@@ -272,6 +361,9 @@ module auto_tester (
         if (test_12.done) {
           autostate.d = autostate.TEST_13;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_13:
         io_seg = test_13.io_seg;
@@ -280,6 +372,9 @@ module auto_tester (
         test_13.start = 1;
         if (test_13.done) {
           autostate.d = autostate.TEST_14;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_14:
@@ -290,6 +385,9 @@ module auto_tester (
         if (test_14.done) {
           autostate.d = autostate.TEST_15;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_15:
         io_seg = test_15.io_seg;
@@ -298,6 +396,9 @@ module auto_tester (
         test_15.start = 1;
         if (test_15.done) {
           autostate.d = autostate.TEST_16;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_16:
@@ -308,6 +409,9 @@ module auto_tester (
         if (test_16.done) {
           autostate.d = autostate.TEST_17;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_17:
         io_seg = test_17.io_seg;
@@ -316,6 +420,9 @@ module auto_tester (
         test_17.start = 1;
         if (test_17.done) {
           autostate.d = autostate.TEST_18;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_18:
@@ -326,6 +433,9 @@ module auto_tester (
         if (test_18.done) {
           autostate.d = autostate.TEST_19;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_19:
         io_seg = test_19.io_seg;
@@ -334,6 +444,9 @@ module auto_tester (
         test_19.start = 1;
         if (test_19.done) {
           autostate.d = autostate.TEST_20;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_20:
@@ -344,6 +457,9 @@ module auto_tester (
         if (test_20.done) {
           autostate.d = autostate.TEST_21;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_21:
         io_seg = test_21.io_seg;
@@ -352,6 +468,9 @@ module auto_tester (
         test_21.start = 1;
         if (test_21.done) {
           autostate.d = autostate.TEST_22;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_22:
@@ -362,6 +481,9 @@ module auto_tester (
         if (test_22.done) {
           autostate.d = autostate.TEST_23;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_23:
         io_seg = test_23.io_seg;
@@ -370,6 +492,9 @@ module auto_tester (
         test_23.start = 1;
         if (test_23.done) {
           autostate.d = autostate.TEST_24;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_24:
@@ -380,6 +505,9 @@ module auto_tester (
         if (test_24.done) {
           autostate.d = autostate.TEST_25;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_25:
         io_seg = test_25.io_seg;
@@ -388,6 +516,9 @@ module auto_tester (
         test_25.start = 1;
         if (test_25.done) {
           autostate.d = autostate.TEST_26;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_26:
@@ -398,6 +529,9 @@ module auto_tester (
         if (test_26.done) {
           autostate.d = autostate.TEST_27;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_27:
         io_seg = test_27.io_seg;
@@ -406,6 +540,9 @@ module auto_tester (
         test_27.start = 1;
         if (test_27.done) {
           autostate.d = autostate.TEST_28;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_28:
@@ -416,6 +553,9 @@ module auto_tester (
         if (test_28.done) {
           autostate.d = autostate.TEST_29;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_29:
         io_seg = test_29.io_seg;
@@ -424,6 +564,9 @@ module auto_tester (
         test_29.start = 1;
         if (test_29.done) {
           autostate.d = autostate.TEST_30;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_30:
@@ -434,6 +577,9 @@ module auto_tester (
         if (test_30.done) {
           autostate.d = autostate.TEST_31;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_31:
         io_seg = test_31.io_seg;
@@ -442,6 +588,9 @@ module auto_tester (
         test_31.start = 1;
         if (test_31.done) {
           autostate.d = autostate.TEST_32;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_32:
@@ -452,6 +601,9 @@ module auto_tester (
         if (test_32.done) {
           autostate.d = autostate.TEST_33;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_33:
         io_seg = test_33.io_seg;
@@ -460,6 +612,9 @@ module auto_tester (
         test_33.start = 1;
         if (test_33.done) {
           autostate.d = autostate.TEST_34;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_34:
@@ -470,6 +625,9 @@ module auto_tester (
         if (test_34.done) {
           autostate.d = autostate.TEST_35;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_35:
         io_seg = test_35.io_seg;
@@ -478,6 +636,9 @@ module auto_tester (
         test_35.start = 1;
         if (test_35.done) {
           autostate.d = autostate.TEST_36;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_36:
@@ -488,6 +649,9 @@ module auto_tester (
         if (test_36.done) {
           autostate.d = autostate.TEST_37;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_37:
         io_seg = test_37.io_seg;
@@ -496,6 +660,9 @@ module auto_tester (
         test_37.start = 1;
         if (test_37.done) {
           autostate.d = autostate.TEST_38;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_38:
@@ -506,6 +673,9 @@ module auto_tester (
         if (test_38.done) {
           autostate.d = autostate.TEST_39;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_39:
         io_seg = test_39.io_seg;
@@ -514,6 +684,9 @@ module auto_tester (
         test_39.start = 1;
         if (test_39.done) {
           autostate.d = autostate.TEST_40;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_40:
@@ -524,6 +697,9 @@ module auto_tester (
         if (test_40.done) {
           autostate.d = autostate.TEST_41;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_41:
         io_seg = test_41.io_seg;
@@ -532,6 +708,9 @@ module auto_tester (
         test_41.start = 1;
         if (test_41.done) {
           autostate.d = autostate.TEST_42;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_42:
@@ -542,6 +721,9 @@ module auto_tester (
         if (test_42.done) {
           autostate.d = autostate.TEST_43;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_43:
         io_seg = test_43.io_seg;
@@ -550,6 +732,9 @@ module auto_tester (
         test_43.start = 1;
         if (test_43.done) {
           autostate.d = autostate.TEST_44;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_44:
@@ -560,6 +745,9 @@ module auto_tester (
         if (test_44.done) {
           autostate.d = autostate.TEST_45;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_45:
         io_seg = test_45.io_seg;
@@ -568,6 +756,9 @@ module auto_tester (
         test_45.start = 1;
         if (test_45.done) {
           autostate.d = autostate.TEST_46;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_46:
@@ -578,6 +769,9 @@ module auto_tester (
         if (test_46.done) {
           autostate.d = autostate.TEST_47;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_47:
         io_seg = test_47.io_seg;
@@ -586,6 +780,9 @@ module auto_tester (
         test_47.start = 1;
         if (test_47.done) {
           autostate.d = autostate.TEST_48;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_48:
@@ -596,6 +793,9 @@ module auto_tester (
         if (test_48.done) {
           autostate.d = autostate.TEST_49;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_49:
         io_seg = test_49.io_seg;
@@ -604,6 +804,9 @@ module auto_tester (
         test_49.start = 1;
         if (test_49.done) {
           autostate.d = autostate.TEST_50;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_50:
@@ -614,6 +817,9 @@ module auto_tester (
         if (test_50.done) {
           autostate.d = autostate.TEST_51;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_51:
         io_seg = test_51.io_seg;
@@ -622,6 +828,9 @@ module auto_tester (
         test_51.start = 1;
         if (test_51.done) {
           autostate.d = autostate.TEST_52;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_52:
@@ -632,6 +841,9 @@ module auto_tester (
         if (test_52.done) {
           autostate.d = autostate.TEST_53;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_53:
         io_seg = test_53.io_seg;
@@ -640,6 +852,9 @@ module auto_tester (
         test_53.start = 1;
         if (test_53.done) {
           autostate.d = autostate.TEST_54;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_54:
@@ -650,6 +865,9 @@ module auto_tester (
         if (test_54.done) {
           autostate.d = autostate.TEST_55;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_55:
         io_seg = test_55.io_seg;
@@ -658,6 +876,9 @@ module auto_tester (
         test_55.start = 1;
         if (test_55.done) {
           autostate.d = autostate.TEST_56;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_56:
@@ -668,6 +889,9 @@ module auto_tester (
         if (test_56.done) {
           autostate.d = autostate.TEST_57;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_57:
         io_seg = test_57.io_seg;
@@ -676,6 +900,9 @@ module auto_tester (
         test_57.start = 1;
         if (test_57.done) {
           autostate.d = autostate.TEST_58;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_58:
@@ -686,6 +913,9 @@ module auto_tester (
         if (test_58.done) {
           autostate.d = autostate.TEST_59;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_59:
         io_seg = test_59.io_seg;
@@ -694,6 +924,9 @@ module auto_tester (
         test_59.start = 1;
         if (test_59.done) {
           autostate.d = autostate.TEST_60;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
         }
 
       autostate.TEST_60:
@@ -704,6 +937,9 @@ module auto_tester (
         if (test_60.done) {
           autostate.d = autostate.TEST_61;
         }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
 
       autostate.TEST_61:
         io_seg = test_61.io_seg;
@@ -711,7 +947,216 @@ module auto_tester (
         opcode_led = test_61.opcode_led;
         test_61.start = 1;
         if (test_61.done) {
-          autostate.d = autostate.STANDBY;
+          autostate.d = autostate.TEST_62;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_62:
+        io_seg = test_62.io_seg;
+        io_sel = test_62.io_sel;
+        opcode_led = test_62.opcode_led;
+        test_62.start = 1;
+        if (test_62.done) {
+          autostate.d = autostate.TEST_63;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_63:
+        io_seg = test_63.io_seg;
+        io_sel = test_63.io_sel;
+        opcode_led = test_63.opcode_led;
+        test_63.start = 1;
+        if (test_63.done) {
+          autostate.d = autostate.TEST_64;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_64:
+        io_seg = test_64.io_seg;
+        io_sel = test_64.io_sel;
+        opcode_led = test_64.opcode_led;
+        test_64.start = 1;
+        if (test_64.done) {
+          autostate.d = autostate.TEST_65;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_65:
+        io_seg = test_65.io_seg;
+        io_sel = test_65.io_sel;
+        opcode_led = test_65.opcode_led;
+        test_65.start = 1;
+        if (test_65.done) {
+          autostate.d = autostate.TEST_66;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_66:
+        io_seg = test_66.io_seg;
+        io_sel = test_66.io_sel;
+        opcode_led = test_66.opcode_led;
+        test_66.start = 1;
+        if (test_66.done) {
+          autostate.d = autostate.TEST_67;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_67:
+        io_seg = test_67.io_seg;
+        io_sel = test_67.io_sel;
+        opcode_led = test_67.opcode_led;
+        test_67.start = 1;
+        if (test_67.done) {
+          autostate.d = autostate.TEST_68;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_68:
+        io_seg = test_68.io_seg;
+        io_sel = test_68.io_sel;
+        opcode_led = test_68.opcode_led;
+        test_68.start = 1;
+        if (test_68.done) {
+          autostate.d = autostate.TEST_69;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_69:
+        io_seg = test_69.io_seg;
+        io_sel = test_69.io_sel;
+        opcode_led = test_69.opcode_led;
+        test_69.start = 1;
+        if (test_69.done) {
+          autostate.d = autostate.TEST_70;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_70:
+        io_seg = test_70.io_seg;
+        io_sel = test_70.io_sel;
+        opcode_led = test_70.opcode_led;
+        test_70.start = 1;
+        if (test_70.done) {
+          autostate.d = autostate.TEST_71;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_71:
+        io_seg = test_71.io_seg;
+        io_sel = test_71.io_sel;
+        opcode_led = test_71.opcode_led;
+        test_71.start = 1;
+        if (test_71.done) {
+          autostate.d = autostate.TEST_72;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_72:
+        io_seg = test_72.io_seg;
+        io_sel = test_72.io_sel;
+        opcode_led = test_72.opcode_led;
+        test_72.start = 1;
+        if (test_72.done) {
+          autostate.d = autostate.TEST_73;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_73:
+        io_seg = test_73.io_seg;
+        io_sel = test_73.io_sel;
+        opcode_led = test_73.opcode_led;
+        test_73.start = 1;
+        if (test_73.done) {
+          autostate.d = autostate.TEST_74;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_74:
+        io_seg = test_74.io_seg;
+        io_sel = test_74.io_sel;
+        opcode_led = test_74.opcode_led;
+        test_74.start = 1;
+        if (test_74.done) {
+          autostate.d = autostate.TEST_75;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_75:
+        io_seg = test_75.io_seg;
+        io_sel = test_75.io_sel;
+        opcode_led = test_75.opcode_led;
+        test_75.start = 1;
+        if (test_75.done) {
+          autostate.d = autostate.TEST_76;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_76:
+        io_seg = test_76.io_seg;
+        io_sel = test_76.io_sel;
+        opcode_led = test_76.opcode_led;
+        test_76.start = 1;
+        if (test_76.done) {
+          autostate.d = autostate.TEST_77;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+
+      autostate.TEST_77:
+        io_seg = test_77.io_seg;
+        io_sel = test_77.io_sel;
+        opcode_led = test_77.opcode_led;
+        test_77.start = 1;
+        if (test_77.done) {
+          autostate.d = autostate.DONE;
+        }
+        if (compulsory_error) {
+          autostate.d = autostate.ERROR;
+        }
+      
+      autostate.DONE:
+        if (restart) {
+          autostate.d = autostate.TEST_0;
+        }
+
+      autostate.ERROR:
+        opcode_led = 6b000000;
+        seg_display.values = {4he, 4he, 4he, 4he}; // EEEE
+        io_seg = ~seg_display.seg;
+        io_sel = ~seg_display.sel;
+        if (restart) {
+          autostate.d = autostate.TEST_0;
         }
     }
   }
