@@ -21,4 +21,4 @@ For our project, we digitalize this hand game and initiated some reworking and r
 ## Future Work
 
 - Scoring system using persistent data
-- Audio player
+- Audio/sound/music player using a speaker/buzzer
