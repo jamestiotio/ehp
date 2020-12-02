@@ -1,0 +1,8 @@
+module individual_test_case #(
+
+) (
+  input clk,
+  input rst
+) {
+
+}

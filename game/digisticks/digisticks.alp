@@ -5,6 +5,7 @@
     <src>game_tester.luc</src>
     <src>game_main_logic.luc</src>
     <src>player_fsm.luc</src>
+    <src>individual_test_case.luc</src>
     <src>factorial.luc</src>
     <component>pipeline.luc</component>
     <component>counter.luc</component>
