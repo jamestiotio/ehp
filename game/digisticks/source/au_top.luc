@@ -12,6 +12,12 @@ module au_top (
     output io_sel [4],      // Digit select on IO Shield
     input io_button [5],    // 5 buttons on IO Shield
     input io_dip [3][8]     // DIP switches on IO Shield
+    input player1_button [6],
+    input player2_button [6],
+    input reset_button,
+    output finger_leds [4][4],
+    output seven_seg_1 [4][8],
+    output seven_seg_2 [4][8]
   ) {
 
   sig rst; // reset signal
