@@ -1,1 +1,27 @@
 // Format: pin <name>[x] <pin_number> {pulldown/pullup}
+
+pin seven_seg_p1_sel[0] xxx;
+pin seven_seg_p1_sel[1] xxx;
+pin seven_seg_p1_sel[2] xxx;
+pin seven_seg_p1_sel[3] xxx;
+
+pin seven_seg_p1_seg[0] xxx;
+pin seven_seg_p1_seg[1] xxx;
+pin seven_seg_p1_seg[2] xxx;
+pin seven_seg_p1_seg[3] xxx;
+pin seven_seg_p1_seg[4] xxx;
+pin seven_seg_p1_seg[5] xxx;
+pin seven_seg_p1_seg[6] xxx;
+
+pin seven_seg_p2_sel[0] xxx;
+pin seven_seg_p2_sel[1] xxx;
+pin seven_seg_p2_sel[2] xxx;
+pin seven_seg_p2_sel[3] xxx;
+
+pin seven_seg_p2_seg[0] xxx;
+pin seven_seg_p2_seg[1] xxx;
+pin seven_seg_p2_seg[2] xxx;
+pin seven_seg_p2_seg[3] xxx;
+pin seven_seg_p2_seg[4] xxx;
+pin seven_seg_p2_seg[5] xxx;
+pin seven_seg_p2_seg[6] xxx;

@@ -1,1 +1,21 @@
 // Format: pin <name>[x] <pin_number> {pulldown/pullup}
+
+pin finger_leds[0][0] xxx;
+pin finger_leds[0][1] xxx;
+pin finger_leds[0][2] xxx;
+pin finger_leds[0][3] xxx;
+
+pin finger_leds[1][0] xxx;
+pin finger_leds[1][1] xxx;
+pin finger_leds[1][2] xxx;
+pin finger_leds[1][3] xxx;
+
+pin finger_leds[2][0] xxx;
+pin finger_leds[2][1] xxx;
+pin finger_leds[2][2] xxx;
+pin finger_leds[2][3] xxx;
+
+pin finger_leds[3][0] xxx;
+pin finger_leds[3][1] xxx;
+pin finger_leds[3][2] xxx;
+pin finger_leds[3][3] xxx;

@@ -1,6 +1,4 @@
 module adder16 (
-    input clk,
-    input rst,
     input x[16],
     input y[16],
     input alufn[6],
@@ -18,14 +16,10 @@ module adder16 (
   increment16 increment16 (.x(x), .y(y), .alufn(alufn[5:0]));
   decrement16 decrement16 (.x(x), .y(y), .alufn(alufn[5:0]));
 
-  .clk(clk), .rst(rst) {
-      factorial factorial(.x(x));
-  }
-
   always {
     err = 0;
 
-    // Choose adder, multiplier, increment/decrement or factorial based on alufn[3:2]
+    // Choose adder, multiplier, or increment/decrement based on alufn[3:2]
     case (alufn[3:2]) {
       b00:
         // Add (x+y) or subtract (x-y) based on alufn[0]
@@ -52,10 +46,6 @@ module adder16 (
           b1:
             result = decrement16.s;
         }
-      
-      // Other operations such as the builtin functions of $clog2(x) and $pow(x,y) require constants, and thus are not implementable
-      b11:
-        result = factorial.s;
 
       default:
         result = 16b0;

@@ -1,1 +1,19 @@
 // Format: pin <name>[x] <pin_number> {pulldown/pullup}
+
+pin centre_button B27 pulldown;
+
+pin player1_button[0] xxx pulldown;
+pin player1_button[1] xxx pulldown;
+pin player1_button[2] xxx pulldown;
+pin player1_button[3] xxx pulldown;
+pin player1_button_powerup xxx pulldown;
+pin player1_button_sevenseg xxx pulldown;
+
+pin player2_button[0] xxx pulldown;
+pin player2_button[1] xxx pulldown;
+pin player2_button[2] xxx pulldown;
+pin player2_button[3] xxx pulldown;
+pin player2_button_powerup xxx pulldown;
+pin player2_button_sevenseg xxx pulldown;
+
+pin reset_button xxx pulldown;

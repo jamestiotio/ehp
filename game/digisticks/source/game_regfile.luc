@@ -19,7 +19,7 @@ module game_regfile (
     output player2left[16],
     output player2right[16],
     
-    output literal_out[16],//or to 7seg? we prob need to take in state as an input as well
+    output literal_out[16],
     output powerup_out[16]
   ) {
   .clk(clk){
@@ -32,13 +32,13 @@ module game_regfile (
       dff p1_powerups[16](#INIT(3));
       dff p2_powerups[16](#INIT(3));
       
-      dff from[16];
-      dff to[16];
+      dff from[16](#INIT(0));
+      dff to[16](#INIT(0));
       
-      dff literal[16];
-      dff powerup_chosen[16];
-      dff winner[16];
-      dff turn[16];
+      dff literal[16](#INIT(0));
+      dff powerup_chosen[16](#INIT(0));
+      dff winner[16](#INIT(0));
+      dff turn[16](#INIT(0));
     }
   }
   always {

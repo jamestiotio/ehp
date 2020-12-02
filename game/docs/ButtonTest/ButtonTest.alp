@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="BrPinTest" board="Alchitry Au" language="Lucid" version="3">
+<project name="ButtonTest" board="Alchitry Au" language="Lucid" version="3">
   <files>
+    <component>pipeline.luc</component>
     <src top="true">au_top.luc</src>
     <component>reset_conditioner.luc</component>
+    <component>button_conditioner.luc</component>
     <constraint lib="true">alchitry.acf</constraint>
-    <constraint>custom.acf</constraint>
+    <constraint lib="true">io.acf</constraint>
     <constraint lib="true">au.xdc</constraint>
   </files>
 </project>

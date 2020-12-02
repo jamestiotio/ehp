@@ -1,6 +1,0 @@
-module player_fsm (
-    input clk,
-    input rst
-) {
-    
-}

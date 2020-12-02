@@ -20,7 +20,7 @@ module button_muxes (
     input p1_powerup,//powerup buttons
     input p2_powerup,
     
-    input turn,
+    input turn[16],
     
     output p1l,
     output p1r,
@@ -31,7 +31,7 @@ module button_muxes (
   ) {
 
   always {
-    if (turn == 0){
+    if (turn == 16b0) {
       p1l = p1_p1l;
       p1r = p1_p1r;
       p2l = p1_p2l;
@@ -40,7 +40,7 @@ module button_muxes (
       toggle = p1_toggle;
       powerup = p1_powerup;  
     }
-    else{
+    else {
       p1l = p2_p1l;
       p1r = p2_p1r;
       p2l = p2_p2l;

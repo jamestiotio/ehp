@@ -1,25 +1,25 @@
 // au_top has two states: GAMEPLAY and TESTING
-// au_top toggles between the states when io_button[1] is pressed (since users/players should not be able to access TEST mode)
+// au_top toggles between the states when centre_button is pressed (since users/players should not be able to access TEST mode)
 
 module au_top (
-    input clk,              // 100MHz clock
-    input rst_n,            // reset button (active low)
-    output led [8],         // 8 user controllable LEDs
-    input usb_rx,           // USB->Serial input
-    output usb_tx,          // USB->Serial output
-    output io_led [3][8],   // LEDs on IO Shield
-    output io_seg [8],      // 7-segment LEDs on IO Shield
-    output io_sel [4],      // Digit select on IO Shield
-    input io_button [5],    // 5 buttons on IO Shield
-    input io_dip [3][8]     // DIP switches on IO Shield
-    input player1_button [6], // IO Buttons for Player 1
-    input player2_button [6], // IO Buttons for Player 2
-    input reset_button,       // Game Reset Button
-    output finger_leds [4][4], // LEDs that represent fingers
-    output seven_seg_p1_sel [4], // Common Cathode seven-segment display digit select for Player 1
-    output seven_seg_p1_seg [8], // Common Cathode seven-segment display segment LEDs for Player 1
-    output seven_seg_p2_sel [4], // Common Cathode seven-segment display digit select for Player 2
-    output seven_seg_p2_seg [8], // Common Cathode seven-segment display segment LEDs for Player 2
+    input clk,                    // 100MHz clock
+    input rst_n,                  // reset button (active low)
+    output led [8],               // 8 user controllable LEDs
+    input usb_rx,                 // USB->Serial input
+    output usb_tx,                // USB->Serial output
+    input centre_button,          // Middle button on IO Shield
+    input player1_button [4],     // IO Buttons for Player 1
+    input player2_button [4],     // IO Buttons for Player 2
+    input player1_button_powerup, // Player 1 Powerup Button
+    input player1_button_sevenseg,// Player 1 7-Seg Button
+    input player2_button_powerup, // Player 2 Powerup Button
+    input player2_button_sevenseg,// Player 2 7-Seg Button
+    input reset_button,           // Game Reset Button
+    output finger_leds [4][4],    // LEDs to represent fingers
+    output seven_seg_p1_sel [4],  // Common Cathode seven-segment display digit select for Player 1
+    output seven_seg_p1_seg [7],  // Common Cathode seven-segment display segment LEDs for Player 1 (without decimal point)
+    output seven_seg_p2_sel [4],  // Common Cathode seven-segment display digit select for Player 2
+    output seven_seg_p2_seg [7]   // Common Cathode seven-segment display segment LEDs for Player 2 (without decimal point)
   ) {
 
   sig rst; // reset signal
@@ -32,10 +32,10 @@ module au_top (
     button_conditioner button_cond;
     edge_detector edge (#RISE(1), #FALL(0));
 
-    .rst(rst){
+    .rst(rst) {
       fsm state = {PLAY, TEST};
-      game_main_logic gameplay ();
-      game_tester tester ();
+      game_main_logic gameplay (.player1_button(player1_button), .player2_button(player2_button), .player1_button_powerup(player1_button_powerup), .player1_button_sevenseg(player1_button_sevenseg), .player2_button_powerup(player2_button_powerup), .player2_button_sevenseg(player2_button_sevenseg), .reset_button(reset_button));
+      // game_tester tester ();
     }
   }
 
@@ -45,25 +45,30 @@ module au_top (
 
     usb_tx = usb_rx;        // loop serial port
 
-    button_cond.in = io_button[1];
+    button_cond.in = centre_button;
     edge.in = button_cond.out;
-    state_change = edge.out;  
+    state_change = edge.out;
 
-    io_led = 3x{{8h00}};    // turn LEDs off
-    io_seg = game_main_logic.io_seg;
-    io_sel = game_main_logic.io_sel;
+    // Turn off all of the LEDs and 7-segment digits
+    finger_leds = 4x{{4h0}};
+    seven_seg_p1_sel = 4hf;
+    seven_seg_p1_seg = 7b1111111;
+    seven_seg_p2_sel = 4hf;
+    seven_seg_p2_seg = 7b1111111;
 
     case (state.q) {
       state.PLAY:
-        io_led = game_main_logic.io_led;
+        finger_leds = gameplay.finger_leds;
+        seven_seg_p1_sel = gameplay.seven_seg_p1_sel;
+        seven_seg_p1_seg = gameplay.seven_seg_p1_seg;
+        seven_seg_p2_sel = gameplay.seven_seg_p2_sel;
+        seven_seg_p2_seg = gameplay.seven_seg_p2_seg;
+
         if (state_change) {
           state.d = state.TEST;
         }
 
       state.TEST:
-        io_seg = game_tester.io_seg;
-        io_sel = game_tester.io_sel;
-        io_led[2][5:0] = game_tester.opcode_led;
         if (state_change) {
           state.d = state.PLAY;
         }

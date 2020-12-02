@@ -6,6 +6,8 @@ module game_cu (
     input to[16],   // fixed read port from REGFILE (R7)
     input alu_output[16],
     input turn[16], // fixed read port from REGFILE (R11)
+
+    input reset_button_pressed,
     
     input p1r,  // button of player 1 right hand (R0)
     input p1l,  // button of player 1 left hand (R1)
@@ -14,23 +16,23 @@ module game_cu (
     input powerup, // powerup button
     input toggle,  // toggle button
     
-    
     output alufn[6],
     output asel,
     output bsel[2],
     output wdsel[2],
     output ra[4],
     output rb[4],
-    output rc[4]
+    output rc[4],
+    output powerup_yes,
+    output split_yes
   ) {
-  
   
   .clk(clk) {
     fsm game_fsm = {
       //START,
       RESET,
       CHECK_HAND,
-      CHECK_HAND_POST,
+      // CHECK_HAND_POST,
       STORE_IN_FROM,
       STORE_IN_TO,
       
@@ -39,11 +41,11 @@ module game_cu (
       MOD_ATTACK,
       
       // SPLIT
-      GO_TO_SPLIT,
+      GO_TO_SPLIT,  // 1?
       TOGGLE_ADD_SPLIT,
       TOGGLE_MOD_SPLIT,
       CHECK_SPLIT,
-      CHECK_SPLIT_POST,
+      //CHECK_SPLIT_POST,
       ADD_SPLIT,  // ADD_MOD_SUB
       MOD_SPLIT,
       SUB_SPLIT,
@@ -63,16 +65,16 @@ module game_cu (
       
       P1,
       CHECK_P2_RIGHT,
-      CHECK_P2_RIGHT_POST,
+      //CHECK_P2_RIGHT_POST,
       CHECK_P2_LEFT,
-      CHECK_P2_LEFT_POST,
+      //CHECK_P2_LEFT_POST,
       P1_WINS,
       
       P2,
       CHECK_P1_RIGHT,
-      CHECK_P1_RIGHT_POST,
+      //CHECK_P1_RIGHT_POST,
       CHECK_P1_LEFT,
-      CHECK_P1_LEFT_POST,
+      //CHECK_P1_LEFT_POST,
       P2_WINS,
       
       GAME_OVER
@@ -81,17 +83,23 @@ module game_cu (
 
   always {
     alufn = 6b0;
-    asel = 0;
-    bsel = 00;
-    wdsel = 00;
-    ra = 1111;
-    rb = 1111;
-    rc = 1111; //set by default go to R15 (always 0)
+    asel = b0;
+    bsel = b00;
+    wdsel = b00;
+    ra = b1111;
+    rb = b1111;
+    rc = b1111; //set by default go to R15 (always 0)
+    powerup_yes = 0;
+    split_yes = 0;
     
     if (rst) {
       game_fsm.d = game_fsm.RESET;
-    }   
-   
+    }
+
+    if (reset_button_pressed && game_fsm.q != game_fsm.RESET) {
+      game_fsm.d = game_fsm.RESET;
+    }
+
     case(game_fsm.q) {
   
       //game_fsm.START:
@@ -101,16 +109,13 @@ module game_cu (
         game_fsm.d = game_fsm.P1;
         
       game_fsm.CHECK_HAND:
-        alufn = 110110; // CMPEQ: 11011X
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
+        alufn = b110110; // CMPEQ: 11011X
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
         ra = from[3:0];
-        rb = 1111;
-        rc = 1111;
-        game_fsm.d = game_fsm.CHECK_HAND_POST;
-          
-      game_fsm.CHECK_HAND_POST:
+        rb = b1111;
+        rc = b1111;
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.P1;
         } else {
@@ -119,49 +124,49 @@ module game_cu (
         
       game_fsm.STORE_IN_FROM:
         if (p1r) {
-          alufn = 011010; // 'X'
-          asel = 0;
-          wdsel = 00;
-          ra = 1111; // R15
-          rc = 0110; // R6
+          alufn = b011010; // 'X'
+          asel = b0;
+          wdsel = b00;
+          ra = b1111; // R15
+          rc = b0110; // R6
         }
         else if (p1l) {
-          wdsel = 01;
-          rc = 0110;
+          wdsel = b01;
+          rc = b0110;
         }
         else if (p2r) {
-          alufn = 011010; // 'X'
-          asel = 1;
-          wdsel = 00;
-          rc = 0110;
+          alufn = b011010; // 'X'
+          asel = b1;
+          wdsel = b00;
+          rc = b0110;
         }
         else if (p2l) {
-          wdsel = 10;
-          rc = 0110;
+          wdsel = b10;
+          rc = b0110;
         }
         game_fsm.d = game_fsm.CHECK_HAND;
       
       game_fsm.STORE_IN_TO:
         if (p1r) {
-          alufn = 011010; // 'X'
-          asel = 0;
-          wdsel = 00;
-          ra = 1111; // R15
-          rc = 0111; // R7
+          alufn = b011010; // 'X'
+          asel = b0;
+          wdsel = b00;
+          ra = b1111; // R15
+          rc = b0111; // R7
         }
         else if (p1l) {
-          wdsel = 01;
-          rc = 0111;
+          wdsel = b01;
+          rc = b0111;
         }
         else if (p2r) {
-          alufn = 011010; // 'X'
-          asel = 1;
-          wdsel = 00;
-          rc = 0111;
+          alufn = b011010; // 'X'
+          asel = b1;
+          wdsel = b00;
+          rc = b0111;
         }
         else if (p2l) {
-          wdsel = 10;
-          rc = 0111;
+          wdsel = b10;
+          rc = b0111;
         }       
         case (turn){    // CHECK TURN
           16b0:
@@ -177,119 +182,123 @@ module game_cu (
       // ATTACK     
       game_fsm.ADD_ATTACK:
         alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
         ra = to[3:0];
         rb = from[3:0];
         rc = to[3:0];
         game_fsm.d = game_fsm.MOD_ATTACK;
        
       game_fsm.MOD_ATTACK:
-        alufn = 000110;  // MOD
-        asel = 0;
-        bsel = 10;
-        wdsel = 00;
+        alufn = b000110;  // MOD
+        asel = b0;
+        bsel = b10;
+        wdsel = b00;
         ra = to[3:0];
         rc = to[3:0];
         game_fsm.d = game_fsm.CHECK_P2_RIGHT;
         
       // SPLIT
       game_fsm.GO_TO_SPLIT:
-        wdsel = 01;
-        rc = 1000;  // R8 (LITERAL)
+        split_yes = 1;
+        wdsel = b01;
+        rc = b1000;  // R8 (LITERAL)
         // show 1 on seven segment
          if (powerup) {
           game_fsm.d = game_fsm.ADD_SPLIT;
-        } else{
-          game_fsm.d = game_fsm.TOGGLE_ADD_SPLIT;
+        } else if(toggle){
+          game_fsm.d = game_fsm.CHECK_SPLIT;
         }              
         
       game_fsm.TOGGLE_ADD_SPLIT:
-        // show option on seven segment
-        alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 01;
-        wdsel = 00;
-        ra = 1000;  // R8
-        rc = 1000;
+        split_yes = 1;
+        alufn = b000000;  // ADD: 0000X0
+        asel = b0;
+        bsel = b01;
+        wdsel = b00;
+        ra = b1000;  // R8
+        rc = b1000;
          if (powerup) {
           game_fsm.d = game_fsm.ADD_SPLIT;
-        } else {
+        } else if (toggle){
           game_fsm.d = game_fsm.CHECK_SPLIT;
         }
         
       game_fsm.CHECK_SPLIT:
-        alufn = 110110;  // CMPLE: 11011X
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 1000;      // R8
+        split_yes = 1;
+        alufn = 6b110110;  // CMPLE: 11011X
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b1000;      // R8
         rb = from[3:0]; // FROM
-        rc = 1111;      // R15
-        if (toggle) {
-          game_fsm.d = game_fsm.CHECK_SPLIT_POST;
-        }
-      game_fsm.CHECK_SPLIT_POST:
-          if (alu_output == 16b1) {
+        rc = b1111;      // R15
+        if (alu_output == 16b1) {
             game_fsm.d = game_fsm.TOGGLE_ADD_SPLIT;
-          } else{
+          } else if (alu_output == 16b0){
             game_fsm.d = game_fsm.GO_TO_SPLIT;
-          }             
+          }           
         
       game_fsm.ADD_SPLIT:
-        alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 1000;
+        split_yes = 1;
+        alufn = b000000;  // ADD: 0000X0
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b1000;
         rb = to[3:0];
         rc = to[3:0];
         game_fsm.d = game_fsm.MOD_SPLIT;
       
       game_fsm.MOD_SPLIT:
-        alufn = 000111;  // MOD
-        asel = 0;
-        bsel = 10;
-        wdsel = 00;
+        split_yes = 1;
+        alufn = b000111;  // MOD
+        asel = b0;
+        bsel = b10;
+        wdsel = b00;
         ra = to[3:0];
         rc = to[3:0];
         game_fsm.d = game_fsm.SUB_SPLIT;
         
       game_fsm.SUB_SPLIT:
-        alufn = 000001;  // SUB: 0000X1
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 1000;   // R8
+        split_yes = 1;
+        alufn = b000001;  // SUB: 0000X1
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b1000;   // R8
         rb = from[3:0];
         rc = from[3:0];
         game_fsm.d = game_fsm.UPDATE_TURN;
        
       // POWERUP
       game_fsm.POWERUP:
-        wdsel = 01;
-        rc = 1001;  // R9
+        powerup_yes = 1;
+        wdsel = b01;
+        rc = b1001;  // R9
         if (toggle) {
           game_fsm.d = game_fsm.CHOOSE_POWERUP_ADD;
         }
      
       game_fsm.CHOOSE_POWERUP_ADD:
-        alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 01;
-        wdsel = 00;
-        ra = 1001;  // R9
-        rc = 1001;
+        powerup_yes = 1;
+        alufn = b000000;  // ADD: 0000X0
+        asel = b0;
+        bsel = b01;
+        wdsel = b00;
+        ra = b1001;  // R9
+        rc = b1001;
         game_fsm.d = game_fsm.CHOOSE_POWERUP_MOD;
         
       game_fsm.CHOOSE_POWERUP_MOD:
-        alufn = 000111;  // MOD
-        asel = 0;
-        bsel = 11;
-        wdsel = 00;
-        ra = 1001;
-        rc = 1001;
+        powerup_yes = 1;
+        alufn = b000111;  // MOD
+        asel = b0;
+        bsel = b11;
+        wdsel = b00;
+        ra = b1001;
+        rc = b1001;
         // show in seven seegment
         if (toggle) {
         game_fsm.d = game_fsm.CHOOSE_POWERUP_ADD;
@@ -299,6 +308,7 @@ module game_cu (
         }
         
       game_fsm.WAIT_FOR_FROM_POWERUP:
+        powerup_yes = 1;
         case (turn) {
           16b0:
             if (p1r | p1l) {
@@ -311,26 +321,27 @@ module game_cu (
         }
         
       game_fsm.STORE_FROM_POWERUP:
+        powerup_yes = 1;
         if (p1r) {
-          alufn = 011010; // 'X'
-          asel = 0;
-          wdsel = 00;
-          ra = 1111; // R15
-          rc = 0110; // R6
+          alufn = b011010; // 'X'
+          asel = b0;
+          wdsel = b00;
+          ra = b1111; // R15
+          rc = b0110; // R6
         }
         else if (p1l) {
-          wdsel = 01;
-          rc = 0110;
+          wdsel = b01;
+          rc = b0110;
         }
         else if (p2r) {
-          alufn = 011010; // 'X'
-          asel = 1;
-          wdsel = 00;
-          rc = 0110;
+          alufn = b011010; // 'X'
+          asel = b1;
+          wdsel = b00;
+          rc = b0110;
         }
         else if (p2l) {
-          wdsel = 10;
-          rc = 0110;
+          wdsel = b10;
+          rc = b0110;
         }
         case (turn) {
           16b0:
@@ -344,71 +355,74 @@ module game_cu (
         }
         
       game_fsm.STORE_TO_POWERUP:
+        powerup_yes = 1;
         if (p1r) {
-          alufn = 011010; // 'X'
-          asel = 0;
-          wdsel = 00;
-          ra = 1111; // R15
-          rc = 0111; // R7
+          alufn = b011010; // 'X'
+          asel = b0;
+          wdsel = b00;
+          ra = b1111; // R15
+          rc = b0111; // R7
         }
         else if (p1l) {
-          wdsel = 01;
-          rc = 0111;
+          wdsel = b01;
+          rc = b0111;
         }
         else if (p2r) {
-          alufn = 011010; // 'X'
-          asel = 1;
-          wdsel = 00;
-          rc = 0111;
+          alufn = b011010; // 'X'
+          asel = b1;
+          wdsel = b00;
+          rc = b0111;
         }
         else if (p2l) {
-          wdsel = 10;
-          rc = 0111;
+          wdsel = b10;
+          rc = b0111;
         }   
         game_fsm.d = game_fsm.READ_R9;
         
       game_fsm.READ_R9:
-        alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 1111;  // R15
-        rb = 1001;  // R9
-        rc = 1111;
+        alufn = b000000;  // ADD: 0000X0
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b1111;  // R15
+        rb = b1001;  // R9
+        rc = b1111;
               
       game_fsm.DO_OP_POWERUP:
+        powerup_yes = 1;
         case (alu_output[3:0]) {
-          0000:
-            alufn = 010101;  // NOT'Y'            
-          0001:
-            alufn = 011000;  // AND            
-          0010:
-            alufn = 010111;  // NAND
-          0011:
-            alufn = 011110;  // OR
-          0100:
-            alufn = 010001;  // NOR
-          0101:
-            alufn = 010110;  // XOR
-          0110:
-            alufn = 011001;  // XNOR
-          0111:
-            alufn = 011010;  // 'X'
-          1000:
-            alufn = 010011;  // NOT'X' 
+          b0000:
+            alufn = b010101;  // NOT'Y'
+          b0001:
+            alufn = b011000;  // AND     
+          b0010:
+            alufn = b010111;  // NAND
+          b0011:
+            alufn = b011110;  // OR
+          b0100:
+            alufn = b010001;  // NOR
+          b0101:
+            alufn = b010110;  // XOR
+          b0110:
+            alufn = b011001;  // XNOR
+          b0111:
+            alufn = b011010;  // 'X'
+          b1000:
+            alufn = b010011;  // NOT'X' 
         }
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
         ra = to[3:0];
         rb = from[3:0];
         rc = to[3:0];
         game_fsm.d = game_fsm.MOD_POWERUP;
         
       game_fsm.MOD_POWERUP:
-        alufn = 000111;  // MOD
-        asel = 0;
-        bsel = 10;
+        powerup_yes = 1;
+        alufn = b000111;  // MOD
+        asel = b0;
+        bsel = b10;
         wdsel = 00;
         ra = to[3:0];
         rc = to[3:0];
@@ -430,16 +444,14 @@ module game_cu (
       }
         
       game_fsm.CHECK_P2_RIGHT:
-        alufn = 110110; // CMPEQ: 11011X
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 0010;  // R2
-        rb = 1111;  // R15
-        rc = 1111;  
-        game_fsm.d = game_fsm.CHECK_P1_RIGHT_POST;
-        
-      game_fsm.CHECK_P2_RIGHT_POST:
+        alufn = b110110; // CMPEQ: 11011X
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b0010;  // R2
+        rb = b1111;  // R15
+        rc = b1111;  
+        //game_fsm.d = game_fsm.CHECK_P1_RIGHT_POST;
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.CHECK_P2_LEFT;
         }
@@ -447,17 +459,18 @@ module game_cu (
           game_fsm.d = game_fsm.P2;
         }
         
-      game_fsm.CHECK_P2_LEFT:
-        alufn = 110110; // CMPEQ: 11011X
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 0011;  // R3
-        rb = 1111;
-        rc = 1111;
-        game_fsm.d = game_fsm.CHECK_P2_LEFT_POST;
+      // game_fsm.CHECK_P2_RIGHT_POST:
         
-      game_fsm.CHECK_P2_LEFT_POST:
+        
+      game_fsm.CHECK_P2_LEFT:
+        alufn = b110110; // CMPEQ: 11011X
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b0011;  // R3
+        rb = b1111;
+        rc = b1111;
+        // game_fsm.d = game_fsm.CHECK_P2_LEFT_POST;
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.P1_WINS;
         }
@@ -465,26 +478,27 @@ module game_cu (
           game_fsm.d = game_fsm.P2;
         }  
         
+      // game_fsm.CHECK_P2_LEFT_POST:
+        
+        
       game_fsm.P1_WINS:
-        alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 01;
-        wdsel = 00;
-        ra = 1011;  // R11
-        rc = 1010;  // R10
+        alufn = b000000;  // ADD: 0000X0
+        asel = b0;
+        bsel = b01;
+        wdsel = b00;
+        ra = b1011;  // R11
+        rc = b1010;  // R10
         game_fsm.d = game_fsm.GAME_OVER;
         
       game_fsm.CHECK_P1_RIGHT:
-        alufn = 110110; // CMPEQ: 11011X
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 0000;  // R1
-        rb = 1111;  // R15
-        rc = 1111;  
-        game_fsm.d = game_fsm.CHECK_P1_RIGHT_POST;
-        
-      game_fsm.CHECK_P1_RIGHT_POST:
+        alufn = b110110; // CMPEQ: 11011X
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b0000;  // R1
+        rb = b1111;  // R15
+        rc = b1111;  
+        // game_fsm.d = game_fsm.CHECK_P1_RIGHT_POST;
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.CHECK_P1_LEFT;
         }
@@ -492,31 +506,35 @@ module game_cu (
           game_fsm.d = game_fsm.P2;
         }
         
+      // game_fsm.CHECK_P1_RIGHT_POST:
+        
+        
       game_fsm.CHECK_P1_LEFT:
-        alufn = 110110; // CMPEQ: 11011X
-        asel = 0;
-        bsel = 00;
-        wdsel = 00;
-        ra = 0010;  // R2
-        rb = 1111;
-        rc = 1111; 
-        game_fsm.d = game_fsm.CHECK_P1_LEFT_POST;           
-    
-      game_fsm.CHECK_P1_LEFT_POST:
+        alufn = b110110; // CMPEQ: 11011X
+        asel = b0;
+        bsel = b00;
+        wdsel = b00;
+        ra = b0010;  // R2
+        rb = b1111;
+        rc = b1111; 
+        // game_fsm.d = game_fsm.CHECK_P1_LEFT_POST;   
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.P2_WINS;
         }
         else{
           game_fsm.d = game_fsm.P2;
-        }
+        }        
+    
+      // game_fsm.CHECK_P1_LEFT_POST:
+        
       
       game_fsm.P2_WINS:
-        alufn = 000000;  // ADD: 0000X0
-        asel = 0;
-        bsel = 01;
-        wdsel = 00;
-        ra = 1011;  // R11
-        rc = 1010;  // R10
+        alufn = b000000;  // ADD: 0000X0
+        asel = b0;
+        bsel = b01;
+        wdsel = b00;
+        ra = b1011;  // R11
+        rc = b1010;  // R10
         game_fsm.d = game_fsm.GAME_OVER;
         
       game_fsm.UPDATE_TURN:
@@ -525,12 +543,12 @@ module game_cu (
         } else {
           game_fsm.d = game_fsm.P1;
         }
-        alufn = 010110; //XOR
-        asel = 0;
-        bsel = 01;
-        wdsel = 00;
-        ra = 1011;   // R11
-        rc = 1011;    
+        alufn = b010110; //XOR
+        asel = b0;
+        bsel = b01;
+        wdsel = b00;
+        ra = b1011;   // R11
+        rc = b1011;    
         
       game_fsm.GAME_OVER:
         //show sth on seven segment or leds?

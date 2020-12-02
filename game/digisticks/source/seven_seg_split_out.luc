@@ -1,0 +1,29 @@
+module seven_seg_split_out (
+    input clk,  // clock
+    input rst,  // reset
+    
+    input split_chosen[16], // from regfile, reads register's value
+    output seg_tolight[7],
+    output dig_tolight[4]
+  ) {
+  .clk(clk) {
+    .rst(rst) {
+      multi_seven_seg seg_display;
+    }
+  }
+
+  always {
+    seg_tolight = 0;
+    dig_tolight = 0;
+    seg_display.values = {5b0,5b0,5b0,5b0};
+    case (split_chosen) {
+      16h0000: seg_display.values = {5h0, 5h0, 5h0, 5h0}; // 0
+      16h0001: seg_display.values = {5h0, 5h0, 5h0, 5h1}; // 1
+      16h0002: seg_display.values = {5h0, 5h0, 5h0, 5h2}; // 2
+      16h0003: seg_display.values = {5h0, 5h0, 5h0, 5h3}; // 3
+      16h0004: seg_display.values = {5h0, 5h0, 5h0, 5h4}; // 4
+    }
+    seg_tolight = ~seg_display.seg;
+    dig_tolight = ~seg_display.sel;
+  }
+}
