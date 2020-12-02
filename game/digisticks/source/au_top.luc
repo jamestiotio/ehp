@@ -16,8 +16,10 @@ module au_top (
     input player2_button [6], // IO Buttons for Player 2
     input reset_button,       // Game Reset Button
     output finger_leds [4][4], // LEDs that represent fingers
-    output seven_seg_1 [4][8], // Common Cathode seven-segment display for Player 1
-    output seven_seg_2 [4][8]  // Common Cathode seven-segment display for Player 2
+    output seven_seg_p1_sel [4], // Common Cathode seven-segment display digit select for Player 1
+    output seven_seg_p1_seg [8], // Common Cathode seven-segment display segment LEDs for Player 1
+    output seven_seg_p2_sel [4],  // Common Cathode seven-segment display digit select for Player 2
+    output seven_seg_p2_seg [8], // Common Cathode seven-segment display segment LEDs for Player 2
   ) {
 
   sig rst; // reset signal
