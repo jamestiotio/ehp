@@ -8,7 +8,7 @@ module factorial (
   ) {
   
   .clk(clk), .rst(rst) {
-    fsm factorial_state = {BEGIN, MULTIPLY, END};
+    fsm factorial_state = {START, MULTIPLY, FINISH};
     dff counter[16];
     dff trans_out[16];
   }
@@ -19,14 +19,14 @@ module factorial (
     s = 0;
 
     case (factorial_state.q) {
-      factorial_state.BEGIN:
+      factorial_state.START:
         trans_out.d = 1;
         counter.d = 1;
 
         if ($unsigned(x) == 0) {
-          factorial_state.d = factorial_state.END;
+          factorial_state.d = factorial_state.FINISH;
         }
-        
+
         else {
           factorial_state.d = factorial_state.MULTIPLY;
         }
@@ -35,14 +35,14 @@ module factorial (
         trans_out.d = trans_out.q * counter.q;
 
         if (counter.q == $unsigned(x)) {
-          factorial_state.d = factorial_state.END;
+          factorial_state.d = factorial_state.FINISH;
         }
 
         else {
           counter.d = counter.q + 1;
         }
 
-      factorial_state.END:
+      factorial_state.FINISH:
         counter.d = counter.q;
         s = trans_out.q;
       

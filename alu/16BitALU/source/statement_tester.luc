@@ -61,7 +61,7 @@ module statement_tester #(
         seg_display.values = {4hc, 4h5, id_high, id_low}; // CS##, where ## is the test case ID number in decimal
         io_seg = ~seg_display.seg;
         io_sel = ~seg_display.sel;
-        if (start) {
+        if (start && slow_clk_edge.out) {
           state.d = state.DISP_X_1;
         }
 

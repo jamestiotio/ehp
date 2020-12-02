@@ -34,10 +34,11 @@ module multiplier16 (
 
       b10: // Signed modulo
         if (y != 0) { // Avoid dividing by zero
-          if ($signed(y) > 0) {
-            if ($signed(x) < 0) {
-              a = (($signed(x) - (($signed(x) / y) * y)) + y); 
-              s = a - ((a / y) * y);
+          if (y[15] == 0) {
+            if (x[15] == 1) {
+              a = $unsigned(~x) + 1; // Two's complement
+              temp = $unsigned(a) - (($unsigned(a) / y) * y);
+              s = y - $unsigned(temp);
             }
 
             else {
@@ -46,16 +47,17 @@ module multiplier16 (
           }
 
           else {
-            if ($signed(x) < 0) {
-              a = ~x + 1; // Two's complement
-              divisor = ~y + 1; // Two's complement
-              temp = a - ((a / divisor) * divisor);
-              s = ~temp + 1; // Two's complement
+            if (x[15] == 1) {
+              a = $unsigned(~x) + 1; // Two's complement
+              divisor = $unsigned(~y) + 1; // Two's complement
+              temp = $unsigned(a) - (($unsigned(a) / $unsigned(divisor)) * $unsigned(divisor));
+              s = $unsigned(~temp) + 1; // Two's complement
             }
 
             else {
-              divisor = ~y + 1; // Two's complement
-              s = x - ((x / divisor) * divisor) - divisor;
+              divisor = $unsigned(~y) + 1; // Two's complement
+              temp = x - ((x / $unsigned(divisor)) * $unsigned(divisor));
+              s = $signed(y) + $unsigned(temp);
             }
           }
         }
