@@ -1,4 +1,6 @@
 module adder16 (
+    input clk,
+    input rst,
     input x[16],
     input y[16],
     input alufn[6],
@@ -6,7 +8,8 @@ module adder16 (
     output cout,
     output z,
     output v,
-    output n
+    output n,
+    output err
   ) {
 
   sig result[16];  // This signal is used to store the result for the calculation of z v n
@@ -15,9 +18,14 @@ module adder16 (
   increment16 increment16 (.x(x), .y(y), .alufn(alufn[5:0]));
   decrement16 decrement16 (.x(x), .y(y), .alufn(alufn[5:0]));
 
-  always {
+  .clk(clk), .rst(rst) {
+      factorial factorial(.x(x));
+  }
 
-    // Choose adder or multiplier based on alufn[3:2]
+  always {
+    err = 0;
+
+    // Choose adder, multiplier, increment/decrement or factorial based on alufn[3:2]
     case (alufn[3:2]) {
       b00:
         // Add (x+y) or subtract (x-y) based on alufn[0]
@@ -34,12 +42,20 @@ module adder16 (
 
       b01:
         result = multiplier16.s;
+        err = multiplier16.error;
 
       b10:
-        result = increment16.s;
-
+        case (alufn[1]) {
+          b0:
+            result = increment16.s;
+          
+          b1:
+            result = decrement16.s;
+        }
+      
+      // Other operations such as the builtin functions of $clog2(x) and $pow(x,y) require constants, and thus are not implementable
       b11:
-        result = decrement16.s;
+        result = factorial.s;
 
       default:
         result = 16b0;

@@ -9,25 +9,51 @@ module comparator16 (
   ) {
 
   always {
-    // Only the least significant bit (LSB) gives the result of the operation
+    // Chooses min-max or basic comparator based on alufn[3]
+    
+    // Only the least significant bit (LSB) gives the result of comparison operations
     result[15:1] = 15b0;
 
-    // Chooses operations x==y, x<y or x<=y based on alufn[2:1]
-    case (alufn[2:1]) {
-      b00:
-        result[0] = b0;
+    case (alufn[3]) {
+      b0:
+        // Chooses operations x==y, x<y or x<=y based on alufn[2:1]
+        case (alufn[2:1]) {
+          b00:
+            result[0] = b0;
 
-      b01:
-        result[0] = (x == y);
+          b01:
+            result[0] = (x == y);
 
-      b10:
-        result[0] = (x < y);
+          b10:
+            result[0] = (x < y);
 
-      b11:
-        result[0] = (x <= y);
+          b11:
+            result[0] = (x <= y);
 
-      default:
-        result[0] = b0;
+          default:
+            result[0] = b0;
+        }
+      
+      b1:
+        // Chooses max(x, y) or min(x, y) based on alufn[2:1]
+        case (alufn[2:1]) {
+          b01:
+            if (x > y) {
+              result = x;
+            }
+            else {
+              result = y;
+            }
+
+          b10:
+            if (x < y) {
+              result = x;
+            }
+            else {
+              result = y;
+            }
+        }
     }
+    
   }
 }

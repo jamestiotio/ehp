@@ -27,8 +27,8 @@ module au_top (
 
     .rst(rst){
       fsm state = {MANUAL, AUTOMATIC};
-      auto_tester auto_tester (.start(start_auto_test));
-      manual_tester manual_tester (.io_dip(io_dip), .state_change_btn(io_button[1]));
+      auto_tester auto_tester (.start(start_auto_test), .restart_btn(io_button[1]), .forced_error(io_button[0]));
+      manual_tester manual_tester (.io_dip(io_dip), .state_change_btn(io_button[1]), .forced_error(io_button[0]));
     }
   }
 

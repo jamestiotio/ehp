@@ -8,12 +8,13 @@ def instantiate_states(num_of_states):
     for i in range(num_of_states):
         tests += f", TEST_{i}"
 
-    return whitespace_begin + "fsm autostate = {STANDBY" + tests + "};"
+    return whitespace_begin + "fsm autostate = {STANDBY" + tests + ", DONE, ERROR};"
 
 
 def instantiate_tester(test_num, input_x, input_y, opcode, expected_output):
     whitespace_begin = "      "
-    return whitespace_begin + f"statement_tester test_{test_num} (#INPUT_X(16h{input_x}), #INPUT_Y(16h{input_y}), #OPCODE(6b{opcode}), #EXPECTED_OUTPUT(16h{expected_output}));"
+    digits = "{0:0=2d}".format(test_num)
+    return whitespace_begin + f"statement_tester test_{test_num} (#TEST_ID_HIGH({digits[0]}), #TEST_ID_LOW({digits[1]}), #INPUT_X(16h{input_x}), #INPUT_Y(16h{input_y}), #OPCODE(6b{opcode}), #EXPECTED_OUTPUT(16h{expected_output}));"
 
 
 def test_case_state(state_num, is_final):
@@ -33,6 +34,7 @@ def test_case_state(state_num, is_final):
         + f"opcode_led = test_{state_num}.opcode_led;\n"
     )
     output += whitespace_begin + whitespace_interval + f"test_{state_num}.start = 1;\n"
+
     output += (
         whitespace_begin + whitespace_interval + f"if (test_{state_num}.done) " + "{\n"
     )
@@ -41,7 +43,7 @@ def test_case_state(state_num, is_final):
         output += (
             whitespace_begin
             + (2 * whitespace_interval)
-            + f"autostate.d = autostate.STANDBY;\n"
+            + f"autostate.d = autostate.DONE;\n"
         )
     else:
         output += (
@@ -49,6 +51,18 @@ def test_case_state(state_num, is_final):
             + (2 * whitespace_interval)
             + f"autostate.d = autostate.TEST_{state_num + 1};\n"
         )
+
+    output += whitespace_begin + whitespace_interval + "}\n"
+
+    output += (
+        whitespace_begin + whitespace_interval + f"if (compulsory_error) " + "{\n"
+    )
+
+    output += (
+        whitespace_begin
+        + (2 * whitespace_interval)
+        + f"autostate.d = autostate.ERROR;\n"
+    )
 
     output += whitespace_begin + whitespace_interval + "}"
 
@@ -66,16 +80,22 @@ test_cases = [
     ("7fff", "0000", "000100", "0000"), # MUL
     ("0420", "0069", "000101", "000a"), # DIV
     ("0069", "0000", "000101", "0069"), # DIV
-    ("0420", "0069", "000111", "0006"), # MODULO
-    ("0069", "0000", "000111", "0069"), # MODULO
+    ("fff3", "0005", "000110", "0002"), # SIGNED MODULO
+    ("0369", "ff28", "000110", "ff31"), # SIGNED MODULO
+    ("fff2", "fff3", "000110", "ffff"), # SIGNED MODULO
+    ("03e8", "0369", "000110", "007f"), # SIGNED MODULO
+    ("0420", "0069", "000111", "0006"), # UNSIGNED MODULO
+    ("0069", "0000", "000111", "0069"), # UNSIGNED MODULO
     ("1970", "ffff", "001000", "1971"), # INCREMENT X
     ("ffff", "abab", "001000", "0000"), # INCREMENT X
     ("1970", "ffff", "001001", "0000"), # INCREMENT Y
     ("ffff", "abab", "001001", "abac"), # INCREMENT Y
-    ("1970", "0000", "001100", "196f"), # DECREMENT X
-    ("0000", "abab", "001100", "ffff"), # DECREMENT X
-    ("1970", "0000", "001101", "ffff"), # DECREMENT Y
-    ("0000", "abab", "001101", "abaa"), # DECREMENT Y
+    ("1970", "0000", "001010", "196f"), # DECREMENT X
+    ("0000", "abab", "001010", "ffff"), # DECREMENT X
+    ("1970", "0000", "001011", "ffff"), # DECREMENT Y
+    ("0000", "abab", "001011", "abaa"), # DECREMENT Y
+    ("0000", "ffff", "001100", "0001"), # FACTORIAL
+    ("0005", "0000", "001100", "0078"), # FACTORIAL
     ("abcd", "dede", "010000", "0000"), # ZERO
     ("2f2f", "0101", "010000", "0000"), # ZERO
     ("2af0", "afe0", "010001", "500f"), # NOR
@@ -114,12 +134,22 @@ test_cases = [
     ("ffff", "0008", "100001", "00ff"), # SHR
     ("ffff", "0001", "100011", "ffff"), # SRA
     ("3fff", "0008", "100011", "003f"), # SRA
+    ("f0f0", "0004", "100100", "0f0f"), # RL
+    ("10ad", "0007", "100100", "5688"), # RL
+    ("f0f0", "0004", "100101", "0f0f"), # RR
+    ("10ad", "0007", "100101", "e1e1"), # RR
+    ("b544", "0000", "101100", "22ad"), # MIRROR
+    ("1092", "ffff", "101100", "4908"), # MIRROR
     ("7fff", "7fff", "110011", "0001"), # CMPEQ
     ("7fff", "0000", "110011", "0000"), # CMPEQ
     ("7fff", "7fff", "110101", "0000"), # CMPLT
     ("0000", "7fff", "110101", "0001"), # CMPLT
     ("7fff", "0000", "110111", "0000"), # CMPLE
     ("2121", "2121", "110111", "0001"), # CMPLE
+    ("23f4", "0001", "111011", "23f4"), # MAX
+    ("0202", "f007", "111011", "f007"), # MAX
+    ("c103", "c102", "111101", "c102"), # MIN
+    ("ffff", "ffff", "111101", "ffff"), # MIN
 ]
 
 # Begin generating a list of states for auto_tester and instantiate the statement tester modules
