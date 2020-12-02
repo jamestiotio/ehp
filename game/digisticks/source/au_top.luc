@@ -1,5 +1,5 @@
 // au_top has two states: GAMEPLAY and TESTING
-// au_top toggles between the states when io_button[2] is pressed
+// au_top toggles between the states when io_button[1] is pressed
 
 module au_top (
     input clk,              // 100MHz clock
@@ -45,7 +45,7 @@ module au_top (
 
     usb_tx = usb_rx;        // loop serial port
 
-    button_cond.in = io_button[2];
+    button_cond.in = io_button[1];
     edge.in = button_cond.out;
     state_change = edge.out;  
 
