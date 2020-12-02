@@ -1,27 +1,27 @@
 // Format: pin <name>[x] <pin_number> {pulldown/pullup}
 
-pin seven_seg_p1_sel[0] xxx;
-pin seven_seg_p1_sel[1] xxx;
-pin seven_seg_p1_sel[2] xxx;
-pin seven_seg_p1_sel[3] xxx;
+pin seven_seg_p1_sel[0] C40;  //12
+pin seven_seg_p1_sel[1] C39;  //9
+pin seven_seg_p1_sel[2] C11;  //8
+pin seven_seg_p1_sel[3] C43;  //6
 
-pin seven_seg_p1_seg[0] xxx;
-pin seven_seg_p1_seg[1] xxx;
-pin seven_seg_p1_seg[2] xxx;
-pin seven_seg_p1_seg[3] xxx;
-pin seven_seg_p1_seg[4] xxx;
-pin seven_seg_p1_seg[5] xxx;
-pin seven_seg_p1_seg[6] xxx;
+pin seven_seg_p1_seg[0] C6;  //1
+pin seven_seg_p1_seg[1] C5;  //2
+pin seven_seg_p1_seg[2] C45;  //4
+pin seven_seg_p1_seg[3] C46;  //5
+pin seven_seg_p1_seg[4] C9;  //7
+pin seven_seg_p1_seg[5] C8;  //10
+pin seven_seg_p1_seg[6] C42;  //11
 
-pin seven_seg_p2_sel[0] xxx;
-pin seven_seg_p2_sel[1] xxx;
-pin seven_seg_p2_sel[2] xxx;
-pin seven_seg_p2_sel[3] xxx;
+pin seven_seg_p2_sel[0] B3;  //12
+pin seven_seg_p2_sel[1] B28;  //9
+pin seven_seg_p2_sel[2] B24;  //8
+pin seven_seg_p2_sel[3] B23;  //16
 
-pin seven_seg_p2_seg[0] xxx;
-pin seven_seg_p2_seg[1] xxx;
-pin seven_seg_p2_seg[2] xxx;
-pin seven_seg_p2_seg[3] xxx;
-pin seven_seg_p2_seg[4] xxx;
-pin seven_seg_p2_seg[5] xxx;
-pin seven_seg_p2_seg[6] xxx;
+pin seven_seg_p2_seg[0] B49; //1
+pin seven_seg_p2_seg[1] B46; //2
+pin seven_seg_p2_seg[2] B43; //4
+pin seven_seg_p2_seg[3] B40; //5
+pin seven_seg_p2_seg[4] B37; //7
+pin seven_seg_p2_seg[5] B34; //10 
+pin seven_seg_p2_seg[6] B31; //11
