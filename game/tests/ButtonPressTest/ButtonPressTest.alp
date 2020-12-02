@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ButtonPressTest" board="Alchitry Au" language="Lucid" version="3">
+  <files>
+    <component>pipeline.luc</component>
+    <component>reset_conditioner.luc</component>
+    <component>button_conditioner.luc</component>
+    <src top="true">au_top.luc</src>
+    <constraint>buttons.acf</constraint>
+    <constraint lib="true">alchitry.acf</constraint>
+    <constraint lib="true">au.xdc</constraint>
+    <constraint>seven_seg.acf</constraint>
+    <constraint>leds.acf</constraint>
+  </files>
+</project>

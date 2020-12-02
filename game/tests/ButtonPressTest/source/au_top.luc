@@ -1,0 +1,146 @@
+module au_top (
+    input clk,                    // 100MHz clock
+    input rst_n,                  // reset button (active low)
+    output led [8],               // 8 user controllable LEDs
+    input usb_rx,                 // USB->Serial input
+    output usb_tx,                // USB->Serial output
+    input centre_button,          // Middle button on IO Shield
+    input player1_button [4],     // IO Buttons for Player 1
+    input player2_button [4],     // IO Buttons for Player 2
+    input player1_button_powerup, // Player 1 Powerup Button
+    input player1_button_sevenseg,// Player 1 7-Seg Button
+    input player2_button_powerup, // Player 2 Powerup Button
+    input player2_button_sevenseg,// Player 2 7-Seg Button
+    input reset_button,           // Game Reset Button
+    output finger_leds [4][4]    // LEDs to represent fingers
+  ) {
+
+  sig rst;
+  var i;
+
+  sig p1tl;
+  sig p1tr;
+  sig p1bl;
+  sig p1br;
+  sig p1powerup;
+  sig p1sevenseg;
+  sig p2tl;
+  sig p2tr;
+  sig p2bl;
+  sig p2br;
+  sig p2powerup;
+  sig p2sevenseg;
+
+  .clk(clk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+
+    button_conditioner player1_topleft;
+    button_conditioner player1_topright;
+    button_conditioner player1_bottomleft;
+    button_conditioner player1_bottomright;
+    button_conditioner player1_powerup_button;
+    button_conditioner player1_sevenseg_button;
+
+    button_conditioner player2_topleft;
+    button_conditioner player2_topright;
+    button_conditioner player2_bottomleft;
+    button_conditioner player2_bottomright;
+    button_conditioner player2_powerup_button;
+    button_conditioner player2_sevenseg_button;
+
+    /* button_conditioner game_reset_button;
+
+    edge_detector game_reset (#RISE(1), #FALL(0)); */
+  }
+
+  always {
+    reset_cond.in = ~rst_n; // input raw inverted reset signal
+    rst = reset_cond.out;   // conditioned reset
+
+    usb_tx = usb_rx;        // loop serial port
+    
+    led = 8h00;             // turn LEDs off
+
+    player1_topleft.in = player1_button[0];
+    p1tl = player1_topleft.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[0][i] = p1tl;
+    }
+
+    player1_topright.in = player1_button[1];
+    p1tr = player1_topright.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[1][i] = p1tr;
+    }
+
+    player1_bottomleft.in = player1_button[2];
+    p1bl = player1_bottomleft.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[0][i] = p1bl;
+    }
+
+    player1_bottomright.in = player1_button[3];
+    p1br = player1_bottomright.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[1][i] = p1br;
+    }
+
+    player1_powerup_button.in = player1_button_powerup;
+    p1powerup = player1_powerup_button.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[0][i] = p1powerup;
+        finger_leds[1][i] = p1powerup;
+    }
+
+    player1_sevenseg_button.in = player1_button_sevenseg;
+    p1sevenseg = player1_sevenseg_button.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[0][i] = p1sevenseg;
+        finger_leds[1][i] = p1sevenseg;
+    }
+
+    player2_topleft.in = player2_button[0];
+    p2tl = player2_topleft.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[2][i] = p2tl;
+    }
+
+    player2_topright.in = player2_button[1];
+    p2tr = player2_topright.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[3][i] = p2tr;
+    }
+
+    player2_bottomleft.in = player2_button[2];
+    p2bl = player2_bottomleft.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[2][i] = p2bl;
+    }
+
+    player2_bottomright.in = player2_button[3];
+    p2br = player2_bottomright.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[3][i] = p2br;
+    }
+
+    player2_powerup_button.in = player2_button_powerup;
+    p2powerup = player2_powerup_button.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[2][i] = p2powerup;
+        finger_leds[3][i] = p2powerup;
+    }
+
+    player2_sevenseg_button.in = player2_button_sevenseg;
+    p2sevenseg = player2_sevenseg_button.out;
+    for (i = 0; i < 4; i++) {
+        finger_leds[2][i] = p2sevenseg;
+        finger_leds[3][i] = p2sevenseg;
+    }
+
+    /* game_reset_button.in = reset_button;
+    game_reset.in = game_reset_button.out;
+    game_reset_sig = game_reset.out; */
+  }
+}
