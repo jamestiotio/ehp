@@ -18,7 +18,7 @@ module au_top (
     output finger_leds [4][4], // LEDs that represent fingers
     output seven_seg_p1_sel [4], // Common Cathode seven-segment display digit select for Player 1
     output seven_seg_p1_seg [8], // Common Cathode seven-segment display segment LEDs for Player 1
-    output seven_seg_p2_sel [4],  // Common Cathode seven-segment display digit select for Player 2
+    output seven_seg_p2_sel [4], // Common Cathode seven-segment display digit select for Player 2
     output seven_seg_p2_seg [8], // Common Cathode seven-segment display segment LEDs for Player 2
   ) {
 
