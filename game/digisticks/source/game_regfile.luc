@@ -97,7 +97,7 @@ module game_regfile (
     to_out = to.q;
     turn_out = turn.q;
     
-    //fixed read ports for leds (hands)
+    //fixed read ports for LEDs (hands)
     player1left = p1_left.q;
     player1right = p1_right.q;
     player2left = p2_left.q;

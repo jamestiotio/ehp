@@ -39,19 +39,17 @@ module alu16 (
     ra_data = x;
     rb_data = y;
     
-    if(asel==b0){
-      ra_data = x;
-    } else if (asel == b1) {
+    if (asel == b1) {
       ra_data = 16h0002;
     }
     
-    if(bsel==b00){
-      rb_data = x;
-    }else if(bsel==b01){
+    if (bsel == b01) {
       rb_data = 16h0001;
-    }else if(bsel==b10){
+    }
+    else if (bsel == b10) {
       rb_data = 16h0005;
-    }else if(bsel==b11){
+    }
+    else if (bsel == b11) {
       rb_data = 16h0009;
     }
     
@@ -94,13 +92,12 @@ module alu16 (
     }
     
     out = alu_out;
-    if(wdsel==b00) {
-      out = alu_out;
-    }else if (wdsel == b01){
+
+    if (wdsel == b01) {
       out = 16h0001;
-    }else if(wdsel==b10){
+    }
+    else if (wdsel == b10) {
       out = 16h0003;  
     }
-    
   }
 }

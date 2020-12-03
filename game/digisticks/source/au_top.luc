@@ -186,6 +186,7 @@ module au_top (
     control_unit.p2r = muxes.p2r;
     control_unit.toggle = muxes.toggle;
     control_unit.powerup = muxes.powerup;
+    control_unit.powerup_chosen = register_file.powerup_out;
 
     // REGFILE
     register_file.ra = control_unit.ra;
@@ -286,7 +287,7 @@ module au_top (
     powerup_boolean = control_unit.powerup_yes;
 
     powerup_choice = 16b0;
-    powerup_choice = register_file.literal_out;
+    powerup_choice = register_file.powerup_out;
 
     turn = 16b0;
     turn = register_file.turn_out;
@@ -314,7 +315,7 @@ module au_top (
     split_boolean = control_unit.split_yes;
 
     split_choice = 16b0;
-    split_choice = register_file.powerup_out;
+    split_choice = register_file.literal_out;
 
     split_display.split_chosen = split_choice;
 
