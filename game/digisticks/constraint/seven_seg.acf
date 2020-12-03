@@ -16,7 +16,7 @@ pin seven_seg_p1_seg[6] C42;  //11
 pin seven_seg_p2_sel[0] B3;   //12
 pin seven_seg_p2_sel[1] B28;  //9
 pin seven_seg_p2_sel[2] B24;  //8
-pin seven_seg_p2_sel[3] B23;  //16
+pin seven_seg_p2_sel[3] B23;  //6
 
 pin seven_seg_p2_seg[0] B49;  //1
 pin seven_seg_p2_seg[1] B46;  //2
