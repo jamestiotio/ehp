@@ -1,24 +1,24 @@
 module game_regfile (
     input clk,  // clock
     input rst,  // reset
-    
+
     input ra[4],
     input rb[4],
     input rc[4],
     input data[16],
-    
+
     output ra_data[16],
     output rb_data[16],
-    
+
     output from_out[16], //fixed outputs to control unit
     output to_out[16],
     output turn_out[16], //fixed output to button mux
-    
+
     output player1left[16], //hands
     output player1right[16],
     output player2left[16],
     output player2right[16],
-    
+
     output literal_out[16],
     output powerup_out[16]
   ) {
@@ -43,11 +43,11 @@ module game_regfile (
   }
   always {
     //write port 
-    case(rc){
-      b0000: p1_right.d = data;
-      b0001: p1_left.d = data;
-      b0010: p2_right.d = data;
-      b0011: p2_left.d = data;
+    case (rc) {
+      b0000: p1_right.d = data[3:0]; // max num of fingers is 8 (4b1000)
+      b0001: p1_left.d = data[3:0]; // max num of fingers is 8 (4b1000)
+      b0010: p2_right.d = data[3:0]; // max num of fingers is 8 (4b1000)
+      b0011: p2_left.d = data[3:0]; // max num of fingers is 8 (4b1000)
       b0100: p1_powerups.d = data;
       b0101: p2_powerups.d = data;
       b0110: from.d = data;
@@ -57,9 +57,9 @@ module game_regfile (
       b1010: winner.d = data;
       b1011: turn.d = data;
     }
-    
+
     //read port a 
-    case(ra){
+    case (ra) {
       b0000: ra_data = p1_right.q;
       b0001: ra_data = p1_left.q;
       b0010: ra_data = p2_right.q;
@@ -74,9 +74,9 @@ module game_regfile (
       b1011: ra_data = turn.q;
       default: ra_data = 0;
     }
-    
+
     //read port b
-    case(rb){
+    case (rb) {
       b0000: rb_data = p1_right.q;
       b0001: rb_data = p1_left.q;
       b0010: rb_data = p2_right.q;
@@ -91,18 +91,18 @@ module game_regfile (
       b1011: rb_data = turn.q;
       default: rb_data = 0;
     }
-    
+
     //fixed read ports to control unit and button muxes
     from_out = from.q;
     to_out = to.q;
     turn_out = turn.q;
-    
+
     //fixed read ports for LEDs (hands)
     player1left = p1_left.q;
     player1right = p1_right.q;
     player2left = p2_left.q;
     player2right = p2_right.q;
-    
+
     //fixed read ports for use in 7 segs
     literal_out = literal.q;
     powerup_out = powerup_chosen.q; // we need modules that take from split and powerup to show here

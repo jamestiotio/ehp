@@ -540,7 +540,7 @@ module game_cu (
         wdsel = b00;
         ra = b0010;  // R2
         rb = b1111;  // R15
-        rc = b1111;  
+        rc = b1111;
         //game_fsm.d = game_fsm.CHECK_P1_RIGHT_POST;
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.CHECK_P2_LEFT;
