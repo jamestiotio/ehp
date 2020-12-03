@@ -17,15 +17,15 @@ module seven_seg_powerup_out (
     dig_tolight = 0;
     seg_display.values = {5b0,5b0,5b0,5b0};
     case (powerup_chosen) {
-      16h0000: seg_display.values = {5b10001,5b10000,5b10100,5b10101}; // NOT 'Y'
-      16h0001: seg_display.values = {5b11111,5b01010,5b10001,5b01101}; // AND
-      16h0002: seg_display.values = {5b10001,5b01010,5b10001,5b01101}; // NAND
-      16h0003: seg_display.values = {5b11111,5b11111,5b10000,5b10010}; // OR 
-      16h0004: seg_display.values = {5b11111,5b10001,5b10000,5b10010}; // NOR
-      16h0005: seg_display.values = {5b11111,5b10011,5b10000,5b10010}; // XOR
-      16h0006: seg_display.values = {5b10011,5b10001,5b10000,5b10010}; // XNOR
-      16h0007: seg_display.values = {5b11111,5b11111,5b11111,5b10011}; // 'X'
-      16h0008: seg_display.values = {5b10001,5b10000,5b10100,5b10011}; // NOT 'X'
+      16h0000: seg_display.values = {5b10101,5b10100,5b10000,5b10001}; // NOT 'Y'
+      16h0001: seg_display.values = {5b01101,5b10001,5b01010,5b11111}; // AND
+      16h0002: seg_display.values = {5b01101,5b10001,5b01010,5b10001}; // NAND
+      16h0003: seg_display.values = {5b10010,5b10000,5b11111,5b11111}; // OR 
+      16h0004: seg_display.values = {5b10010,5b10000,5b10001,5b11111}; // NOR
+      16h0005: seg_display.values = {5b10010,5b10000,5b10011,5b11111}; // XOR
+      16h0006: seg_display.values = {5b10010,5b10000,5b10001,5b10011}; // XNOR
+      16h0007: seg_display.values = {5b10011,5b11111,5b11111,5b11111}; // 'X'
+      16h0008: seg_display.values = {5b10011,5b10100,5b10000,5b10001}; // NOT 'X'
     }
     seg_tolight = ~seg_display.seg;
     dig_tolight = ~seg_display.sel;

@@ -1,6 +1,6 @@
 // Format: pin <name>[x] <pin_number> {pulldown/pullup}
 
-pin finger_leds[0][0] C3;  // player1 left
+pin finger_leds[0][0] C3;   // player1 left
 pin finger_leds[0][1] C2;
 pin finger_leds[0][2] C48;
 pin finger_leds[0][3] C49;

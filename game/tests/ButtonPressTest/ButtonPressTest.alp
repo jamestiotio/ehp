@@ -3,11 +3,16 @@
   <files>
     <component>pipeline.luc</component>
     <src top="true">au_top.luc</src>
+    <src>seven_seg.luc</src>
+    <src>multi_seven_seg.luc</src>
     <component>reset_conditioner.luc</component>
     <component>button_conditioner.luc</component>
+    <component>decoder.luc</component>
+    <component>counter.luc</component>
     <constraint>buttons.acf</constraint>
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">au.xdc</constraint>
     <constraint>leds.acf</constraint>
+    <constraint>seven_seg.acf</constraint>
   </files>
 </project>

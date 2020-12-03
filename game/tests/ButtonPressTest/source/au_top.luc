@@ -10,11 +10,17 @@ module au_top (
     input player1_button_sevenseg,// Player 1 7-Seg Button
     input player2_button_powerup, // Player 2 Powerup Button
     input player2_button_sevenseg,// Player 2 7-Seg Button
-    output finger_leds [4][4]    // LEDs to represent fingers
+    input reset_button,           // Game Reset Button
+    output finger_leds [4][4],    // LEDs to represent fingers
+    output seven_seg_p1_sel [4],  // Common Cathode seven-segment display digit select for Player 1
+    output seven_seg_p1_seg [7],  // Common Cathode seven-segment display segment LEDs for Player 1 (without decimal point)
+    output seven_seg_p2_sel [4],  // Common Cathode seven-segment display digit select for Player 2
+    output seven_seg_p2_seg [7]   // Common Cathode seven-segment display segment LEDs for Player 2 (without decimal point)
   ) {
 
   sig rst;
   var i;
+  var j;
 
   sig p1tl;
   sig p1tr;
@@ -28,6 +34,7 @@ module au_top (
   sig p2br;
   sig p2powerup;
   sig p2sevenseg;
+  sig gamereset;
 
   .clk(clk) {
     // The reset conditioner is used to synchronize the reset signal to the FPGA
@@ -47,6 +54,12 @@ module au_top (
     button_conditioner player2_bottomright;
     button_conditioner player2_powerup_button;
     button_conditioner player2_sevenseg_button;
+
+    button_conditioner reset_game_signal;
+
+    .rst(rst) {
+      multi_seven_seg seg_display;
+    }
   }
 
   always {
@@ -57,80 +70,125 @@ module au_top (
     
     led = 8h00;             // turn LEDs off
 
+    // By default, set all finger_leds and 7-segments as 0
+    finger_leds = 4x{{4h0}};
+    seven_seg_p1_sel = 0;
+    seven_seg_p1_seg = 0;
+    seven_seg_p2_sel = 0;
+    seven_seg_p2_seg = 0;
+    seg_display.values = {5b0,5b0,5b0,5b0};
+
     player1_topleft.in = player1_button[0];
     p1tl = player1_topleft.out;
-    for (i = 0; i < 4; i++) {
+    if (p1tl) {
+      for (i = 0; i < 4; i++) {
         finger_leds[0][i] = p1tl;
+      }
     }
-
+    
     player1_topright.in = player1_button[1];
     p1tr = player1_topright.out;
-    for (i = 0; i < 4; i++) {
+    if (p1tr) {
+      for (i = 0; i < 4; i++) {
         finger_leds[1][i] = p1tr;
+      }
     }
 
     player1_bottomleft.in = player1_button[2];
     p1bl = player1_bottomleft.out;
-    for (i = 0; i < 4; i++) {
+    if (p1bl) {
+      for (i = 0; i < 4; i++) {
         finger_leds[0][i] = p1bl;
+      }
     }
 
     player1_bottomright.in = player1_button[3];
     p1br = player1_bottomright.out;
-    for (i = 0; i < 4; i++) {
+    if (p1br) {
+      for (i = 0; i < 4; i++) {
         finger_leds[1][i] = p1br;
+      }
     }
 
     player1_powerup_button.in = player1_button_powerup;
     p1powerup = player1_powerup_button.out;
-    for (i = 0; i < 4; i++) {
+    if (p1powerup) {
+      for (i = 0; i < 4; i++) {
         finger_leds[0][i] = p1powerup;
         finger_leds[1][i] = p1powerup;
+      }
     }
 
     player1_sevenseg_button.in = player1_button_sevenseg;
     p1sevenseg = player1_sevenseg_button.out;
-    for (i = 0; i < 4; i++) {
-        finger_leds[0][i] = p1sevenseg;
-        finger_leds[1][i] = p1sevenseg;
+    if (p1sevenseg) {
+      seg_display.values = {5h1,5h2,5h3,5h4}; // 4321
+      seven_seg_p1_seg = ~seg_display.seg;
+      seven_seg_p1_sel = ~seg_display.sel;
     }
 
     player2_topleft.in = player2_button[0];
     p2tl = player2_topleft.out;
-    for (i = 0; i < 4; i++) {
+    if (p2tl) {
+      for (i = 0; i < 4; i++) {
         finger_leds[2][i] = p2tl;
+      }
     }
 
     player2_topright.in = player2_button[1];
     p2tr = player2_topright.out;
-    for (i = 0; i < 4; i++) {
+    if (p2tr) {
+      for (i = 0; i < 4; i++) {
         finger_leds[3][i] = p2tr;
+      }
     }
 
     player2_bottomleft.in = player2_button[2];
     p2bl = player2_bottomleft.out;
-    for (i = 0; i < 4; i++) {
+    if (p2bl) {
+      for (i = 0; i < 4; i++) {
         finger_leds[2][i] = p2bl;
+      }
     }
 
     player2_bottomright.in = player2_button[3];
     p2br = player2_bottomright.out;
-    for (i = 0; i < 4; i++) {
+    if (p2br) {
+      for (i = 0; i < 4; i++) {
         finger_leds[3][i] = p2br;
+      }
     }
 
     player2_powerup_button.in = player2_button_powerup;
     p2powerup = player2_powerup_button.out;
-    for (i = 0; i < 4; i++) {
+    if (p2powerup) {
+      for (i = 0; i < 4; i++) {
         finger_leds[2][i] = p2powerup;
         finger_leds[3][i] = p2powerup;
+      }
     }
 
     player2_sevenseg_button.in = player2_button_sevenseg;
     p2sevenseg = player2_sevenseg_button.out;
-    for (i = 0; i < 4; i++) {
-        finger_leds[2][i] = p2sevenseg;
-        finger_leds[3][i] = p2sevenseg;
+    if (p2sevenseg) {
+      seg_display.values = {5h5,5h6,5h7,5h8}; // 8765
+      seven_seg_p2_seg = ~seg_display.seg;
+      seven_seg_p2_sel = ~seg_display.sel;
+    }
+
+    reset_game_signal.in = reset_button;
+    gamereset = reset_game_signal.out;
+    if (gamereset) {
+      for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
+          finger_leds[i][j] = gamereset;
+        }
+      }
+      seg_display.values = {5h8,5h8,5h8,5h8}; // 8888
+      seven_seg_p1_seg = ~seg_display.seg;
+      seven_seg_p1_sel = ~seg_display.sel;
+      seven_seg_p2_seg = ~seg_display.seg;
+      seven_seg_p2_sel = ~seg_display.sel;
     }
   }
 }
