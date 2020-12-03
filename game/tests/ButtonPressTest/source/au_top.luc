@@ -4,14 +4,12 @@ module au_top (
     output led [8],               // 8 user controllable LEDs
     input usb_rx,                 // USB->Serial input
     output usb_tx,                // USB->Serial output
-    input centre_button,          // Middle button on IO Shield
     input player1_button [4],     // IO Buttons for Player 1
     input player2_button [4],     // IO Buttons for Player 2
     input player1_button_powerup, // Player 1 Powerup Button
     input player1_button_sevenseg,// Player 1 7-Seg Button
     input player2_button_powerup, // Player 2 Powerup Button
     input player2_button_sevenseg,// Player 2 7-Seg Button
-    input reset_button,           // Game Reset Button
     output finger_leds [4][4]    // LEDs to represent fingers
   ) {
 

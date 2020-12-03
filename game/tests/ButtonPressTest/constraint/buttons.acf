@@ -1,7 +1,5 @@
 // Format: pin <name>[x] <pin_number> {pulldown/pullup}
 
-pin centre_button B27 pulldown;
-
 pin player1_button[0] A24 pulldown;   // top left
 pin player1_button[1] A28 pulldown;   // top right
 pin player1_button[2] A21 pulldown;   // bottom left
@@ -15,5 +13,3 @@ pin player2_button[2] B33 pulldown;   // bottom left
 pin player2_button[3] B45 pulldown;   // bottom right
 pin player2_button_powerup B48 pulldown;
 pin player2_button_sevenseg B39 pulldown;
-
-pin reset_button B6 pulldown;
