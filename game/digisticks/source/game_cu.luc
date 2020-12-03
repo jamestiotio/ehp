@@ -118,7 +118,8 @@ module game_cu (
         rc = b1111;
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.P1;
-        } else {
+        }
+        else {
           game_fsm.d = game_fsm.STORE_IN_TO;      
         } 
         
@@ -129,22 +130,23 @@ module game_cu (
           wdsel = b00;
           ra = b1111; // R15
           rc = b0110; // R6
+          game_fsm.d = game_fsm.CHECK_HAND;
         }
         else if (p1l) {
           wdsel = b01;
           rc = b0110;
+          game_fsm.d = game_fsm.CHECK_HAND;
         }
         else if (p2r) {
           alufn = b011010; // 'X'
           asel = b1;
           wdsel = b00;
           rc = b0110;
+          game_fsm.d = game_fsm.CHECK_HAND;
         }
         else if (p2l) {
           wdsel = b10;
           rc = b0110;
-        }
-        if (p1r | p1l | p2r | p2l) {
           game_fsm.d = game_fsm.CHECK_HAND;
         }
         
@@ -170,7 +172,7 @@ module game_cu (
           wdsel = b10;
           rc = b0111;
         }       
-        case (turn){    // CHECK TURN
+        case (turn) {    // CHECK TURN
           16b0:
             if (p1l | p1r) {
               game_fsm.d = game_fsm.GO_TO_SPLIT;
@@ -212,9 +214,10 @@ module game_cu (
         wdsel = b01;
         rc = b1000;  // R8 (LITERAL)
         // show 1 on seven segment
-         if (powerup) {
+        if (powerup) {
           game_fsm.d = game_fsm.ADD_SPLIT;
-        } else if(toggle){
+        }
+        else if (toggle) {
           game_fsm.d = game_fsm.CHECK_SPLIT;
         }              
         
@@ -226,9 +229,10 @@ module game_cu (
         wdsel = b00;
         ra = b1000;  // R8
         rc = b1000;
-         if (powerup) {
+        if (powerup) {
           game_fsm.d = game_fsm.ADD_SPLIT;
-        } else if (toggle){
+        }
+        else if (toggle) {
           game_fsm.d = game_fsm.CHECK_SPLIT;
         }
         
@@ -242,10 +246,11 @@ module game_cu (
         rb = from[3:0]; // FROM
         rc = b1111;      // R15
         if (alu_output == 16b1) {
-            game_fsm.d = game_fsm.TOGGLE_ADD_SPLIT;
-          } else if (alu_output == 16b0){
-            game_fsm.d = game_fsm.GO_TO_SPLIT;
-          }           
+          game_fsm.d = game_fsm.TOGGLE_ADD_SPLIT;
+        }
+        else if (alu_output == 16b0) {
+          game_fsm.d = game_fsm.GO_TO_SPLIT;
+        }           
         
       game_fsm.ADD_SPLIT:
         split_yes = 1;
@@ -369,22 +374,23 @@ module game_cu (
           wdsel = b00;
           ra = b1111; // R15
           rc = b0111; // R7
+          game_fsm.d = game_fsm.READ_R9;
         }
         else if (p1l) {
           wdsel = b01;
           rc = b0111;
+          game_fsm.d = game_fsm.READ_R9;
         }
         else if (p2r) {
           alufn = b011010; // 'X'
           asel = b1;
           wdsel = b00;
           rc = b0111;
+          game_fsm.d = game_fsm.READ_R9;
         }
         else if (p2l) {
           wdsel = b10;
           rc = b0111;
-        }
-        if (p1r | p1l | p2r | p2l) {
           game_fsm.d = game_fsm.READ_R9;
         }
         
@@ -444,20 +450,20 @@ module game_cu (
         }
         
       game_fsm.P1:
-         if (powerup) {
-           game_fsm.d = game_fsm.POWERUP;
-      }
-        else if (p1l | p1r ) {
+        if (powerup) {
+          game_fsm.d = game_fsm.POWERUP;
+        }
+        else if (p1l | p1r) {
           game_fsm.d = game_fsm.STORE_IN_FROM;
-      }     
+        }     
         
       game_fsm.P2:
-         if (powerup) {
-           game_fsm.d = game_fsm.POWERUP;
-      }
-        else if (p2l | p2r ) {
+        if (powerup) {
+          game_fsm.d = game_fsm.POWERUP;
+        }
+        else if (p2l | p2r) {
           game_fsm.d = game_fsm.STORE_IN_FROM;
-      }
+        }
         
       game_fsm.CHECK_P2_RIGHT:
         alufn = b110110; // CMPEQ: 11011X
@@ -471,7 +477,7 @@ module game_cu (
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.CHECK_P2_LEFT;
         }
-        else{
+        else {
           game_fsm.d = game_fsm.P2;
         }
         
@@ -490,7 +496,7 @@ module game_cu (
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.P1_WINS;
         }
-        else{
+        else {
           game_fsm.d = game_fsm.P2;
         }  
         
@@ -518,8 +524,8 @@ module game_cu (
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.CHECK_P1_LEFT;
         }
-        else{
-          game_fsm.d = game_fsm.P2;
+        else {
+          game_fsm.d = game_fsm.P1;
         }
         
       // game_fsm.CHECK_P1_RIGHT_POST:
@@ -537,8 +543,8 @@ module game_cu (
         if (alu_output == 16b1) {
           game_fsm.d = game_fsm.P2_WINS;
         }
-        else{
-          game_fsm.d = game_fsm.P2;
+        else {
+          game_fsm.d = game_fsm.P1;
         }        
     
       // game_fsm.CHECK_P1_LEFT_POST:
@@ -562,7 +568,8 @@ module game_cu (
         rc = b1011;  
         if (turn == 16b0) {
           game_fsm.d = game_fsm.P2;
-        } else {
+        }
+        else {
           game_fsm.d = game_fsm.P1;
         }
         
