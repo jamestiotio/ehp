@@ -22,6 +22,8 @@ For circuitry wiring, connect as such:
 - LEDs to appropriate resistors, IO pins and GND
 - 7-segments' pins to appropriate resistors (except for the 4 digit selectors) and IO pins
 
+Follow the correspondingly attached circuit wiring schematics diagram.
+
 ## Tests
 
 These tests are available inside/within the `tests` folder:
@@ -30,7 +32,20 @@ These tests are available inside/within the `tests` folder:
 - `ButtonTest`: Test the functionality of a set of button and an LED (button is connected to VDD and `B30`, while LED is connected to `B21`, resistor and GND).
 - `ButtonPressTest`: Test the functionality of the complete circuitry to debug any potential/possible connection problems due to poor soldering/wiring.
 
+## Known Current Issues
+
+1. For normal attacks and results of splitting, current `ADD` of 1 is stuck at a constant value of 6 (register number of `from`) and current `MOD` is stuck at a constant value of 16 (only lowest 4 bits stored in REGFILE for each hand).
+
+2. Off-by-one error for SPLIT and POWERUP cycles.
+
+3. POWERUP cycle is `MOD` by a constant value of 7 instead of 9.
+
+4. Implement check to not allow splitting/transferring to the same hand (this will also address the issue of accidental multiple-clicking button signal detection due to unstable/unreliable wiring/soldering connections).
+
+5. Manual reset button needs to also reset all of the REGFILE's DFFs to their original initial values.
+
 ## Future Work
 
 - Scoring system using persistent data
 - Audio/sound/music player using a speaker/buzzer
+- Add more proper game logic testers

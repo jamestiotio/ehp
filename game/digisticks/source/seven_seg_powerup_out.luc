@@ -26,6 +26,7 @@ module seven_seg_powerup_out (
       16h0006: seg_display.values = {5b10010,5b10000,5b10001,5b10011}; // XNOR
       16h0007: seg_display.values = {5b10011,5b11111,5b11111,5b11111}; // 'X'
       16h0008: seg_display.values = {5b10011,5b10100,5b10000,5b10001}; // NOT 'X'
+      default: seg_display.values = {5b11111,5b11111,5b11111,5b11111};
     }
     seg_tolight = ~seg_display.seg;
     dig_tolight = ~seg_display.sel;

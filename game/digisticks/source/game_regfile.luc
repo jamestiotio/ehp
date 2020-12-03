@@ -42,23 +42,23 @@ module game_regfile (
     }
   }
   always {
-    //write port 
+    //write port
     case (rc) {
       b0000: p1_right.d = data[3:0]; // max num of fingers is 8 (4b1000)
       b0001: p1_left.d = data[3:0]; // max num of fingers is 8 (4b1000)
       b0010: p2_right.d = data[3:0]; // max num of fingers is 8 (4b1000)
       b0011: p2_left.d = data[3:0]; // max num of fingers is 8 (4b1000)
-      b0100: p1_powerups.d = data;
-      b0101: p2_powerups.d = data;
-      b0110: from.d = data;
-      b0111: to.d = data;
+      b0100: p1_powerups.d = data[1:0]; // max num of powerups is 3
+      b0101: p2_powerups.d = data[1:0]; // max num of powerups is 3
+      b0110: from.d = data[3:0];
+      b0111: to.d = data[3:0];
       b1000: literal.d = data;
-      b1001: powerup_chosen.d = data;
-      b1010: winner.d = data;
-      b1011: turn.d = data;
+      b1001: powerup_chosen.d = data[3:0];
+      b1010: winner.d = data[0];
+      b1011: turn.d = data[0];
     }
 
-    //read port a 
+    //read port a
     case (ra) {
       b0000: ra_data = p1_right.q;
       b0001: ra_data = p1_left.q;

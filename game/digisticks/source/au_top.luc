@@ -179,31 +179,32 @@ module au_top (
     // Pass IO signals between CU, REGFILE & ALU
 
     // CU
-    control_unit.from = register_file.from_out;
-    control_unit.to = register_file.to_out;
-    control_unit.alu_output = alu.out;
-    control_unit.turn = register_file.turn_out;
     control_unit.p1l = muxes.p1l;
     control_unit.p1r = muxes.p1r;
     control_unit.p2l = muxes.p2l;
     control_unit.p2r = muxes.p2r;
     control_unit.toggle = muxes.toggle;
     control_unit.powerup = muxes.powerup;
+    control_unit.from = register_file.from_out;
+    control_unit.to = register_file.to_out;
+    control_unit.turn = register_file.turn_out;
     control_unit.powerup_chosen = register_file.powerup_out;
 
     // REGFILE
     register_file.ra = control_unit.ra;
     register_file.rb = control_unit.rb;
     register_file.rc = control_unit.rc;
-    register_file.data = alu.out;
 
     // ALU
-    alu.alufn = control_unit.alufn;
     alu.asel = control_unit.asel;
     alu.bsel = control_unit.bsel;
     alu.wdsel = control_unit.wdsel;
+    alu.alufn = control_unit.alufn;
     alu.x = register_file.ra_data;
     alu.y = register_file.rb_data;
+
+    control_unit.alu_output = alu.out;
+    register_file.data = alu.out;
 
     // --- DEFINE OUTPUTS --- //
 
@@ -286,13 +287,10 @@ module au_top (
       finger_leds[3][3:0] = 4b1111;
     }
 
-    powerup_boolean = 0;
     powerup_boolean = control_unit.powerup_yes;
 
-    powerup_choice = 16b0;
     powerup_choice = register_file.powerup_out;
 
-    turn = 16b0;
     turn = register_file.turn_out;
 
     seven_seg_p1_sel = 0;
@@ -300,10 +298,11 @@ module au_top (
     seven_seg_p2_sel = 0;
     seven_seg_p2_seg = 0;
 
-    powerup_display.powerup_chosen = powerup_choice;
+    powerup_display.powerup_chosen = 16hffff;
 
     // Give output to 7-segments
     if (powerup_boolean) {
+      powerup_display.powerup_chosen = powerup_choice;
       if (turn == 0) {
         seven_seg_p1_seg = powerup_display.seg_tolight;
         seven_seg_p1_sel = powerup_display.dig_tolight;
@@ -314,16 +313,15 @@ module au_top (
       }
     }
 
-    split_boolean = 0;
     split_boolean = control_unit.split_yes;
 
-    split_choice = 16b0;
     split_choice = register_file.literal_out;
 
-    split_display.split_chosen = split_choice;
+    split_display.split_chosen = 16hffff;
 
     // Give output to 7-segments
     if (split_boolean) {
+      split_display.split_chosen = split_choice;
       if (turn == 0) {
         seven_seg_p1_seg = split_display.seg_tolight;
         seven_seg_p1_sel = split_display.dig_tolight;

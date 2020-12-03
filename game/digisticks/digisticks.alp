@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="digisticks" board="Alchitry Au" language="Lucid" version="3">
   <files>
-    <src>decrement16.luc</src>
-    <src>seven_seg_split_out.luc</src>
-    <component>pipeline.luc</component>
-    <component>counter.luc</component>
-    <src>increment16.luc</src>
-    <component>decoder.luc</component>
-    <src>adder16.luc</src>
     <src top="true">au_top.luc</src>
-    <src>boolean16.luc</src>
     <src>game_cu.luc</src>
     <src>game_regfile.luc</src>
-    <src>multi_dec_ctr.luc</src>
-    <src>seven_seg_powerup_out.luc</src>
-    <src>decimal_counter.luc</src>
-    <src>alu16.luc</src>
     <src>button_muxes.luc</src>
-    <src>multi_seven_seg.luc</src>
-    <component>reset_conditioner.luc</component>
+    <src>alu16.luc</src>
+    <src>decrement16.luc</src>
+    <src>increment16.luc</src>
+    <src>adder16.luc</src>
+    <src>boolean16.luc</src>
     <src>comparator16.luc</src>
     <src>multiplier16.luc</src>
     <src>shifter16.luc</src>
-    <component>edge_detector.luc</component>
+    <src>decimal_counter.luc</src>
+    <src>multi_dec_ctr.luc</src>
+    <src>seven_seg_split_out.luc</src>
+    <src>seven_seg_powerup_out.luc</src>
     <src>seven_seg.luc</src>
+    <src>multi_seven_seg.luc</src>
+    <component>pipeline.luc</component>
+    <component>counter.luc</component>
+    <component>reset_conditioner.luc</component>
+    <component>edge_detector.luc</component>
+    <component>decoder.luc</component>
     <component>button_conditioner.luc</component>
+    <constraint lib="true">alchitry.acf</constraint>
+    <constraint lib="true">au.xdc</constraint>
     <constraint>leds.acf</constraint>
     <constraint>seven_seg.acf</constraint>
-    <constraint lib="true">alchitry.acf</constraint>
     <constraint>buttons.acf</constraint>
-    <constraint lib="true">au.xdc</constraint>
   </files>
 </project>

@@ -22,6 +22,7 @@ module seven_seg_split_out (
       16h0002: seg_display.values = {5h2, 5h0, 5h0, 5h0}; // 2
       16h0003: seg_display.values = {5h3, 5h0, 5h0, 5h0}; // 3
       16h0004: seg_display.values = {5h4, 5h0, 5h0, 5h0}; // 4
+      default: seg_display.values = {5b11111,5b11111,5b11111,5b11111};
     }
     seg_tolight = ~seg_display.seg;
     dig_tolight = ~seg_display.sel;
