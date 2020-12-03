@@ -57,7 +57,7 @@ module game_cu (
       WAIT_FOR_FROM_POWERUP,
       STORE_FROM_POWERUP,
       STORE_TO_POWERUP,
-      READ_R9,
+      // READ_R9,
       DO_OP_POWERUP,  // DO_OP_MOD
       MOD_POWERUP,
      
@@ -374,27 +374,27 @@ module game_cu (
           wdsel = b00;
           ra = b1111; // R15
           rc = b0111; // R7
-          game_fsm.d = game_fsm.READ_R9;
+          game_fsm.d = game_fsm.DO_OP_POWERUP;
         }
         else if (p1l) {
           wdsel = b01;
           rc = b0111;
-          game_fsm.d = game_fsm.READ_R9;
+          game_fsm.d = game_fsm.DO_OP_POWERUP;
         }
         else if (p2r) {
           alufn = b011010; // 'X'
           asel = b1;
           wdsel = b00;
           rc = b0111;
-          game_fsm.d = game_fsm.READ_R9;
+          game_fsm.d = game_fsm.DO_OP_POWERUP;
         }
         else if (p2l) {
           wdsel = b10;
           rc = b0111;
-          game_fsm.d = game_fsm.READ_R9;
+          game_fsm.d = game_fsm.DO_OP_POWERUP;
         }
         
-      game_fsm.READ_R9:
+      /* game_fsm.READ_R9:
         alufn = b000000;  // ADD: 0000X0
         asel = b0;
         bsel = b00;
@@ -402,8 +402,8 @@ module game_cu (
         ra = b1111;  // R15
         rb = b1001;  // R9
         rc = b1111;
-        game_fsm.d = game_fsm.DO_OP_POWERUP;
-              
+        game_fsm.d = game_fsm.DO_OP_POWERUP; */
+
       game_fsm.DO_OP_POWERUP:
         powerup_yes = 1;
         case (alu_output[3:0]) {

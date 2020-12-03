@@ -54,7 +54,7 @@ module game_regfile (
       b0111: to.d = data;
       b1000: literal.d = data;
       b1001: powerup_chosen.d = data;
-      b1010: winner.d=data;
+      b1010: winner.d = data;
       b1011: turn.d = data;
     }
     
