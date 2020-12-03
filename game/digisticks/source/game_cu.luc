@@ -144,8 +144,10 @@ module game_cu (
           wdsel = b10;
           rc = b0110;
         }
-        game_fsm.d = game_fsm.CHECK_HAND;
-      
+        if (p1r | p1l | p2r | p2l) {
+          game_fsm.d = game_fsm.CHECK_HAND;
+        }
+        
       game_fsm.STORE_IN_TO:
         if (p1r) {
           alufn = b011010; // 'X'
@@ -197,7 +199,12 @@ module game_cu (
         wdsel = b00;
         ra = to[3:0];
         rc = to[3:0];
-        game_fsm.d = game_fsm.CHECK_P2_RIGHT;
+        if (turn == 16b0) {
+          game_fsm.d = game_fsm.CHECK_P2_RIGHT;
+        }
+        else {
+          game_fsm.d = game_fsm.CHECK_P1_RIGHT;
+        }
         
       // SPLIT
       game_fsm.GO_TO_SPLIT:
@@ -376,8 +383,10 @@ module game_cu (
         else if (p2l) {
           wdsel = b10;
           rc = b0111;
-        }   
-        game_fsm.d = game_fsm.READ_R9;
+        }
+        if (p1r | p1l | p2r | p2l) {
+          game_fsm.d = game_fsm.READ_R9;
+        }
         
       game_fsm.READ_R9:
         alufn = b000000;  // ADD: 0000X0
@@ -387,6 +396,7 @@ module game_cu (
         ra = b1111;  // R15
         rb = b1001;  // R9
         rc = b1111;
+        game_fsm.d = game_fsm.DO_OP_POWERUP;
               
       game_fsm.DO_OP_POWERUP:
         powerup_yes = 1;
@@ -426,6 +436,12 @@ module game_cu (
         wdsel = 00;
         ra = to[3:0];
         rc = to[3:0];
+        if (turn == 16b0) {
+          game_fsm.d = game_fsm.CHECK_P2_RIGHT;
+        }
+        else {
+          game_fsm.d = game_fsm.CHECK_P1_RIGHT;
+        }
         
       game_fsm.P1:
          if (powerup) {
@@ -538,17 +554,17 @@ module game_cu (
         game_fsm.d = game_fsm.GAME_OVER;
         
       game_fsm.UPDATE_TURN:
-        if (turn == 16b0) {
-          game_fsm.d = game_fsm.P2;
-        } else {
-          game_fsm.d = game_fsm.P1;
-        }
         alufn = b010110; //XOR
         asel = b0;
         bsel = b01;
         wdsel = b00;
         ra = b1011;   // R11
-        rc = b1011;    
+        rc = b1011;  
+        if (turn == 16b0) {
+          game_fsm.d = game_fsm.P2;
+        } else {
+          game_fsm.d = game_fsm.P1;
+        }
         
       game_fsm.GAME_OVER:
         //show sth on seven segment or leds?

@@ -186,13 +186,13 @@ module au_top (
     control_unit.p2r = muxes.p2r;
     control_unit.toggle = muxes.toggle;
     control_unit.powerup = muxes.powerup;
-    
+
     // REGFILE
     register_file.ra = control_unit.ra;
     register_file.rb = control_unit.rb;
     register_file.rc = control_unit.rc;
     register_file.data = alu.out;
-    
+
     // ALU
     alu.alufn = control_unit.alufn;
     alu.asel = control_unit.asel;
