@@ -47,10 +47,6 @@ module au_top (
     button_conditioner player2_bottomright;
     button_conditioner player2_powerup_button;
     button_conditioner player2_sevenseg_button;
-
-    /* button_conditioner game_reset_button;
-
-    edge_detector game_reset (#RISE(1), #FALL(0)); */
   }
 
   always {
@@ -136,9 +132,5 @@ module au_top (
         finger_leds[2][i] = p2sevenseg;
         finger_leds[3][i] = p2sevenseg;
     }
-
-    /* game_reset_button.in = reset_button;
-    game_reset.in = game_reset_button.out;
-    game_reset_sig = game_reset.out; */
   }
 }
