@@ -34,11 +34,11 @@ These tests are available inside/within the `tests` folder:
 
 ## Known Current Issues
 
-1. For normal attacks and results of splitting, current `ADD` of 1 is stuck at a constant value of 6 (register number of `from`) and current `MOD` is stuck at a constant value of 16 (only lowest 4 bits stored in REGFILE for each hand).
+1. For normal attacks and results of splitting, current `ADD` of 1 is stuck at a constant value of 6 (register number of `from`) and current `MOD` is stuck at a constant value of 16 (only lowest 4 bits stored in REGFILE for each hand; I suspect the MODULO function is not even running).
 
 2. Off-by-one error for SPLIT and POWERUP cycles.
 
-3. POWERUP cycle is `MOD` by a constant value of 7 instead of 9.
+3. POWERUP cycle is `MOD` by a constant value of 6 instead of 9.
 
 4. Implement check to not allow splitting/transferring to the same hand (this will also address the issue of accidental multiple-clicking button signal detection due to unstable/unreliable wiring/soldering connections).
 
