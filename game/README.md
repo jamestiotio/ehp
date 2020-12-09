@@ -1,4 +1,4 @@
-# Chopsticks
+# DigiSticks
 
 SUTD ISTD 2020 Computation Structures 1D Electronic Game Project.
 
