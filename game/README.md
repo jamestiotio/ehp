@@ -51,3 +51,5 @@ These tests are available inside/within the `tests` folder:
 - Add more proper game logic testers
 - Add current player indicator
 - Add game over WIN/LOSE message indicator
+- Somehow rebalance the POWERUP abilities (since for now, they are so powerful that an opponent can be defeated in 2-4 moves if the first player is playing optimally)
+- More players?
