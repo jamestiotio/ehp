@@ -24,6 +24,14 @@ For circuitry wiring, connect as such:
 
 Follow the correspondingly attached circuit wiring schematics diagram.
 
+> NOTES:
+>
+> We attempted to build our own custom hardware & circuitry datapath and FSM specific to this game instead of just emulating the unpipelined 32-bit general-purpose Beta ISA. This is so that we could gain some experience on building our own electrical circuitry.
+>
+> Most electronics components were obtained from Sim Lim Tower located in Singapore.
+>
+> A minor note on choice of button placements: to each player, we allocated 2 buttons which refer to their respective opponent's hand instead of just allocating their own hands' buttons (where they could actually reach out to the other player's side and press the opponent's buttons to indicate their selected target hand). The reason for this is due to `sOcIaL dIsTaNcInG`.
+
 ## Tests
 
 These tests are available inside/within the `tests` folder:
