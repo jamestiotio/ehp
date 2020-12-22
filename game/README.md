@@ -26,7 +26,7 @@ Follow the correspondingly attached circuit wiring schematics diagram.
 
 > NOTES:
 >
-> We attempted to build our own custom hardware & circuitry datapath and FSM specific to this game instead of just emulating the unpipelined 32-bit general-purpose Beta ISA. This is so that we could gain some experience on building our own electrical circuitry.
+> We attempted to build our own custom hardware & circuitry datapath and FSM specific to this game instead of just emulating the unpipelined 32-bit general-purpose Beta ISA. This is so that we could gain some experience on building and designing our own electrical circuitry.
 >
 > Most electronics components were obtained from Sim Lim Tower located in Singapore.
 >
@@ -37,7 +37,7 @@ Follow the correspondingly attached circuit wiring schematics diagram.
 These tests are available inside/within the `tests` folder:
 
 - `BrPinTest`: Test the operability of each SingleEndedIO pin of the custom Alchitry Br board.
-- `ButtonTest`: Test the functionality of a set of button and an LED (button is connected to VDD and `B30`, while LED is connected to `B21`, resistor and GND).
+- `ButtonTest`: Test the functionality of a set of a button and an LED (button is connected to VDD and `B30`, while LED is connected to `B21`, resistor and GND).
 - `ButtonPressTest`: Test the functionality of the complete circuitry to debug any potential/possible connection problems due to poor soldering/wiring.
 
 ## Known Current Issues
