@@ -16,7 +16,7 @@ Team 03-2:
 
 For our project, we digitalize this hand game and initiated some reworking and remodeling of the whole design process. We utilize the variant with remainders and transfers, with an additional extension of including boolean operations into the game (instead of just additions and modulos).
 
-For circuitry wiring, connect as such:
+We utilized 51 I/O pins in total for the game (excluding the 6 debugging LED pins). For circuitry wiring, connect as such:
 
 - Buttons to VDD and IO pins
 - LEDs to appropriate resistors, IO pins and GND
